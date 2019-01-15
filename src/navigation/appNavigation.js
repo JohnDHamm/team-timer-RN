@@ -3,6 +3,7 @@ import { Image, StyleSheet, StatusBar } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation';
 
 import Routes from './routes';
+import Splash from '../screens/main/splash';
 
 // import Images from '@assets/images'
 // import sharedStyles from '../styles/sharedStyles';
@@ -55,11 +56,6 @@ const TabNavConfig = {
 }
 
 const TabNav = createBottomTabNavigator({
-  Team: { screen: TeamStack,
-    navigationOptions: {
-      tabBarLabel: 'Team'
-    }
-  },
   Workout: { screen: WorkoutStack,
     navigationOptions: {
       tabBarLabel: 'Timer'
@@ -70,20 +66,28 @@ const TabNav = createBottomTabNavigator({
       tabBarLabel: 'Results',
     }
   },
+  Team: { screen: TeamStack,
+    navigationOptions: {
+      tabBarLabel: 'Team'
+    }
+  }
 }, TabNavConfig );
 
-const AppContainer = createAppContainer(TabNav);
+
+const MainStackConfig = {
+  headerMode: 'none'
+}
+
+const MainStack = createStackNavigator({
+	Splash: { screen: Splash },
+	App: { screen: TabNav }
+ }, MainStackConfig
+)
+
+const AppContainer = createAppContainer(MainStack);
 
 export default AppContainer;
-// export default class AppNavigation extends Component {
-//
-//   render() {
-//     StatusBar.setBarStyle('light-content');
-//     return (
-      {/*<TabNav />*/}
-    // );
-  // }
-// }
+
 
 const styles = StyleSheet.create({
   tabIcon: {

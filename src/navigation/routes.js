@@ -7,7 +7,6 @@ import Timer from '../screens/workout/timer';
 import ResultsList from '../screens/results/resultsList';
 import WorkoutDetail from '../screens/results/workoutDetail';
 
-
 export default Routes = {
   TeamRoutes: {
     TeamList: { screen: TeamList },
