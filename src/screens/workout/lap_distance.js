@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Button } from 'react-native';
 
 // import sharedStyles from '../../styles/sharedStyles';
 
-export default class Distance extends Component {
+export default class LapDistance extends Component {
 
   static navigationOptions = {
     title: 'How long is each lap?',
@@ -31,8 +31,8 @@ export default class Distance extends Component {
           keyboardType='decimal-pad'
         />
         <Button
-          title="select athletes ->"
-          onPress={() => this.props.navigation.navigate(`SelectAthletes`, { lapCount: lapCount, lapDistance: this.state.lapDistance, lapMetric: 'm' })} />
+          title="select measurement units ->"
+          onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })} />
       </View>
     )
   }

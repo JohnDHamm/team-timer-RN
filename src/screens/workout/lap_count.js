@@ -5,16 +5,16 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 
 export default class LapCount extends Component {
 
+  static navigationOptions = {
+    title: 'How many laps?',
+    headerBackTitle: 'Laps',
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       lapCount: 2
     }
-  };
-
-  static navigationOptions = {
-    title: 'How many laps?',
-    headerBackTitle: 'Laps',
   };
 
   handleCountChange(direction) {
@@ -44,7 +44,7 @@ export default class LapCount extends Component {
           onPress={() => this.handleCountChange("up")} />
         <Button
           title="distance ->"
-          onPress={() => this.props.navigation.navigate(`Distance`, { lapCount: this.state.lapCount })} />
+          onPress={() => this.props.navigation.navigate(`LapDistance`, { lapCount: this.state.lapCount })} />
       </View>
     )
   }
