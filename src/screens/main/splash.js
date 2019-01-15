@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default class Splash extends Component {
 
   componentDidMount() {
-    setTimeout(() => this.props.navigation.navigate('MainApp'), 2000);
+    setTimeout(() => this.props.navigation.navigate('MainApp'), 500);
   }
 
   render(){
