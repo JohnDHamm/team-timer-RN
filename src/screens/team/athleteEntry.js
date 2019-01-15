@@ -6,8 +6,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class AthleteEntry extends Component {
 
   static navigationOptions = {
-    title: 'Enter new athlete',
-    headerBackTitle: 'Athlete entry',
+    title: 'Add an athlete',
   }
 
   render(){
@@ -16,7 +15,7 @@ export default class AthleteEntry extends Component {
     // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
-      <View>
+      <View style={styles.container}>
         <Button
           title="SAVE ATHLETE"
           onPress={() => this.props.navigation.navigate(`TeamList`)} />
@@ -25,10 +24,10 @@ export default class AthleteEntry extends Component {
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

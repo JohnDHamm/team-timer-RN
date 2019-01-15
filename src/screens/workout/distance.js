@@ -6,29 +6,29 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class Distance extends Component {
 
   static navigationOptions = {
-    title: 'Lap distance',
+    title: 'How long is each lap?',
     headerBackTitle: 'Distance',
+    // headerTruncatedBackTitle: '-',
   }
 
   render(){
-    // const { workoutData, timer } = this.props.navigation.state.params;
-    // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
+    const { lapCount } = this.props.navigation.state.params;
+    console.log("lapCount", lapCount);
 
     return(
-      <View>
+      <View style={styles.container}>
         <Button
           title="select athletes ->"
-          onPress={() => this.props.navigation.navigate(`SelectAthletes`)} />
+          onPress={() => this.props.navigation.navigate(`SelectAthletes`, { lapCount: lapCount, lapDistance: 1000, lapMetric: 'm' })} />
       </View>
     )
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

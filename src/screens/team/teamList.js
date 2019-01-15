@@ -6,17 +6,16 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class TeamList extends Component {
 
   static navigationOptions = {
-    title: 'Team List',
+    title: 'Team',
     headerBackTitle: 'Team',
   }
 
   render(){
     // const { workoutData, timer } = this.props.navigation.state.params;
     // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
-      <View>
+      <View style={styles.container}>
         <Button
           title="ADD NEW ATHLETE"
           onPress={() => this.props.navigation.navigate(`AthleteEntry`)} />
@@ -25,10 +24,10 @@ export default class TeamList extends Component {
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

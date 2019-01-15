@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class LapCount extends Component {
 
   static navigationOptions = {
-    title: 'Lap count',
+    title: 'How many laps?',
     headerBackTitle: 'Laps',
   }
 
@@ -16,19 +16,19 @@ export default class LapCount extends Component {
     // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
-      <View>
+      <View style={styles.container}>
         <Button
           title="distance ->"
-          onPress={() => this.props.navigation.navigate(`Distance`)} />
+          onPress={() => this.props.navigation.navigate(`Distance`, { lapCount: 3 })} />
       </View>
     )
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

@@ -7,26 +7,25 @@ export default class WorkoutDetail extends Component {
 
   static navigationOptions = {
     title: 'Workout detail',
-    headerBackTitle: 'Workout',
+    // headerBackTitle: 'Workout',
   }
 
   render(){
     // const { workoutData, timer } = this.props.navigation.state.params;
     // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
-      <View>
+      <View style={styles.container}>
         <Text>Detail view of workout</Text>
       </View>
     )
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

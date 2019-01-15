@@ -6,14 +6,13 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class ResultsList extends Component {
 
   static navigationOptions = {
-    title: 'Workouts list',
+    title: 'Saved Workouts',
     headerBackTitle: 'Workouts',
   }
 
   render(){
     // const { workoutData, timer } = this.props.navigation.state.params;
     // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
       <View>

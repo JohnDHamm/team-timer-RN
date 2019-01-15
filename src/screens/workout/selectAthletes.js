@@ -6,29 +6,31 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class SelectAthletes extends Component {
 
   static navigationOptions = {
-    title: 'Select athletes',
-    headerBackTitle: 'Select athletes',
+    title: 'Who is participating?',
+    headerBackTitle: 'Athletes',
   }
 
   render(){
-    // const { workoutData, timer } = this.props.navigation.state.params;
-    // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
+    const { lapCount, lapDistance, lapMetric } = this.props.navigation.state.params;
+    console.log("lapCount", lapCount);
+    console.log("lapDistance", lapDistance);
+    console.log("lapMetric", lapMetric);
+    const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
-      <View>
+      <View style={styles.container}>
         <Button
-          title="start workoout"
-          onPress={() => this.props.navigation.navigate(`Timer`)} />
+          title="start workout"
+          onPress={() => this.props.navigation.navigate(`Timer`, { lapCount: lapCount, lapDistance: lapDistance, lapMetric: lapMetric, athletes: athletes })} />
       </View>
     )
   }
 }
 
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 	}
-// });
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
+});

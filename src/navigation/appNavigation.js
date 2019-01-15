@@ -4,6 +4,7 @@ import { createStackNavigator, createBottomTabNavigator, createAppContainer } fr
 
 import Routes from './routes';
 import Splash from '../screens/main/splash';
+import Timer from '../screens/workout/timer';
 
 // import Images from '@assets/images'
 // import sharedStyles from '../styles/sharedStyles';
@@ -58,7 +59,7 @@ const TabNavConfig = {
 const TabNav = createBottomTabNavigator({
   Workout: { screen: WorkoutStack,
     navigationOptions: {
-      tabBarLabel: 'Timer'
+      tabBarLabel: 'Workout'
     }
   },
   Results: { screen: ResultsStack,
@@ -80,7 +81,8 @@ const MainStackConfig = {
 
 const MainStack = createStackNavigator({
 	Splash: { screen: Splash },
-	App: { screen: TabNav }
+	MainApp: { screen: TabNav },
+  Timer: { screen: Timer }
  }, MainStackConfig
 )
 
