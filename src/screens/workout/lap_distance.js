@@ -20,7 +20,7 @@ export default class LapDistance extends Component {
 
   render(){
     const { lapCount } = this.props.navigation.state.params;
-    console.log("lapCount", lapCount);
+    // console.log("lapCount", lapCount);
 
     return(
       <View style={styles.container}>

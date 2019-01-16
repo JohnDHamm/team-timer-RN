@@ -19,8 +19,8 @@ export default class LapMetric extends Component {
 
   render(){
     const { lapCount, lapDistance } = this.props.navigation.state.params;
-    console.log("lapCount", lapCount);
-    console.log("lapDistance", lapDistance);
+    // console.log("lapCount", lapCount);
+    // console.log("lapDistance", lapDistance);
 
     return(
       <View style={styles.container}>

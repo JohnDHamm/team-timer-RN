@@ -20,11 +20,11 @@ export default class Timer extends Component {
   }
 
   render(){
-    const { lapCount, lapDistance, lapMetric, athletes } = this.props.navigation.state.params;
+    const { lapCount, lapDistance, lapMetric, athleteIDs } = this.props.navigation.state.params;
     console.log("lapCount", lapCount);
     console.log("lapDistance", lapDistance);
     console.log("lapMetric", lapMetric);
-    console.log("athletes", athletes);
+    console.log("athleteIDs", athleteIDs);
     const workoutData = {
       description: `Jan 15 - ${lapCount} x ${lapDistance}${lapMetric}`,
     }
