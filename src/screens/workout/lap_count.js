@@ -13,9 +13,14 @@ export default class LapCount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lapCount: 2
+      lapCount: 2,
+      showEmptyMessage: false
     }
   };
+
+  componentDidMount() {
+    //check for empty team
+  }
 
   handleCountChange(direction) {
     let newCount;
@@ -35,16 +40,23 @@ export default class LapCount extends Component {
 
     return(
       <View style={styles.container}>
-        <Text style={styles.lapCount}>{this.state.lapCount}</Text>
-        <Button
-          title="down"
-          onPress={() => this.handleCountChange("down")} />
-        <Button
-          title="up"
-          onPress={() => this.handleCountChange("up")} />
-        <Button
-          title="distance ->"
-          onPress={() => this.props.navigation.navigate(`LapDistance`, { lapCount: this.state.lapCount })} />
+        {this.state.showEmptyMessage ?
+          <Text>no team!</Text>
+          : (
+            <View>
+              <Text style={styles.lapCount}>{this.state.lapCount}</Text>
+              <Button
+              title = "down"
+              onPress={() => this.handleCountChange("down")} />
+              <Button
+              title="up"
+              onPress={() => this.handleCountChange("up")} />
+              <Button
+              title="distance ->"
+              onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})} />
+            </View>
+          )
+        }
       </View>
     )
   }
