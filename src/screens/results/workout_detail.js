@@ -11,8 +11,8 @@ export default class WorkoutDetail extends Component {
   }
 
   render(){
-    // const { workoutData, timer } = this.props.navigation.state.params;
-    // console.log("workoutData", workoutData);
+    const { selectedWorkout } = this.props.navigation.state.params;
+    console.log("selectedWorkout", selectedWorkout);
 
     return(
       <View style={styles.container}>
