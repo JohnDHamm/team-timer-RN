@@ -27,8 +27,9 @@ export default class LapDistance extends Component {
         <TextInput
           style={styles.textInput}
           onChangeText={(lapDistance) => this.setState({lapDistance})}
-          value={this.state.lapDistance}
           keyboardType='decimal-pad'
+          maxLength={4}
+          autoFocus={true}
         />
         <Button
           title="select measurement units ->"
@@ -47,8 +48,9 @@ const styles = StyleSheet.create({
   textInput: {
 	  width: 200,
 	  height: 100,
-    borderColor: 'gray',
-    borderWidth: 2,
-    fontSize: 80
+    borderColor: 'purple',
+    borderWidth: 1,
+    fontSize: 80,
+    color: 'purple'
   }
 });

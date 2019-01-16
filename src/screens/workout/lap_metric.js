@@ -24,7 +24,7 @@ export default class LapMetric extends Component {
 
     return(
       <View style={styles.container}>
-        <Text>{this.state.lapMetric}</Text>
+        <Text style={styles.distance}>{lapDistance}{this.state.lapMetric}</Text>
         <Button
           title={"YARDS"}
           style={styles.button}
@@ -64,5 +64,9 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 2,
     fontSize: 50
+  },
+  distance: {
+    fontSize: 80,
+    color: 'purple'
   }
 });
