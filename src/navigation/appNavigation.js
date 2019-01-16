@@ -4,7 +4,7 @@ import { createStackNavigator, createBottomTabNavigator, createAppContainer } fr
 
 import Routes from './routes';
 import Splash from '../screens/main/splash';
-import Timer from '../screens/workout/timer';
+import Timer from '../screens/main/timer';
 
 // import Images from '@assets/images'
 // import sharedStyles from '../styles/sharedStyles';
