@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -9,16 +10,52 @@ export default class AthleteEntry extends Component {
     title: 'Add an athlete',
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      newName: ""
+    }
+  };
+
+  componentDidMount() {
+    const { team } = this.props.navigation.state.params;
+    // console.log("existing team", team);
+  }
+
+  saveAthlete() {
+    //check for name already existing?
+    const { team } = this.props.navigation.state.params;
+    let updatedTeam = team;
+
+    const newAthlete = {
+      name: this.state.newName
+    };
+
+    updatedTeam.push(newAthlete);
+    // console.log("updatedTeam", updatedTeam);
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'TeamList'})]
+    })
+
+    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeam))
+      .then(() => this.props.navigation.dispatch(resetAction));
+  }
+
   render(){
-    // const { workoutData, timer } = this.props.navigation.state.params;
-    // console.log("workoutData", workoutData);
-    // const athletes = [ { name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 } ];
 
     return(
       <View style={styles.container}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(newName) => this.setState({newName})}
+          maxLength={10}
+          autoFocus={true}
+        />
         <Button
           title="SAVE ATHLETE"
-          onPress={() => this.props.navigation.navigate(`TeamList`)} />
+          onPress={() => this.saveAthlete()} />
       </View>
     )
   }
@@ -29,5 +66,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-	}
+	},
+  textInput: {
+	  height: 100,
+    width: 260,
+    borderColor: 'purple',
+    borderWidth: 1,
+    fontSize: 30,
+    color: 'purple'
+  }
 });
