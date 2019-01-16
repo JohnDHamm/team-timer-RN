@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView } from 'react-native';
+import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native'
 
 import _ from 'lodash';
 // import sharedStyles from '../../styles/sharedStyles';
@@ -14,67 +14,84 @@ export default class SelectAthletes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      team: [],
+      // team: [],
       teamList: [],
-      selectedAthleteIDs: []
+      selectedAthletes: [],
+      showEmptyMessage: true,
     }
   }
 
   componentDidMount() {
     //get team list from AsyncStorage
-    const mockTeam = [{ name: 'Lucy', id: 1 }, { name: 'Makenna', id: 2 }, { name: 'Bob', id: 3 }];
-    //check for empty team?
-    this.setState({team: mockTeam}, () => this.orderTeamList(this.state.team));
+    AsyncStorage.getItem('TeamStore')
+      .then(response => {
+        if (response !== null) {
+          this.setState({showEmptyMessage: false}, () => this.createTeamList(JSON.parse(response)))
+        }
+      });
   }
 
-  orderTeamList(team) {
-    // console.log("team", team);
-    //create alphabetical ordered list for display
-    this.setState({teamList: this.state.team}); //temp
+  createTeamList(team) {
+    // create alphabetical ordered list for display
+    console.log("team from store:", team);
+    const teamList = _.map(team, 'name');
+    this.setState({teamList: teamList.sort()}); //temp
   }
 
-  createTeamList() {
-    return _.map(this.state.teamList, athlete => {
-      const selected = this.checkSelected(athlete);
+  renderTeamList() {
+    if (!this.state.teamList) return;
+
+    return _.map(this.state.teamList, name => {
+      const selected = this.checkSelected(name);
       return (
         <TouchableOpacity
-          key={athlete.id}
-          onPress={() => this.toggleAthlete(athlete.id)}
+          key={name}
+          onPress={() => this.toggleAthlete(name)}
         >
-          <Text style={selected ? styles.athleteName : styles.athleteNameUnselected}>{athlete.name}</Text>
+          <Text style={selected ? styles.athleteName : styles.athleteNameUnselected}>{name}</Text>
         </TouchableOpacity>
       );
     })
   }
 
-  checkSelected(athlete) {
-    return this.state.selectedAthleteIDs.includes(athlete.id);
+  checkSelected(name) {
+    return this.state.selectedAthletes.includes(name);
   }
 
-  toggleAthlete(athleteId) {
-    let updatedSelectedAthletes = this.state.selectedAthleteIDs;
-    if (updatedSelectedAthletes.includes(athleteId)) {
-      this.setState({ selectedAthleteIDs: updatedSelectedAthletes.filter(id => id !== athleteId ) }, () => console.log("now selected:", this.state.selectedAthleteIDs));
+  toggleAthlete(athleteName) {
+    let updatedSelectedAthletes = this.state.selectedAthletes;
+    if (updatedSelectedAthletes.includes(athleteName)) {
+      this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) }, () => console.log("now selected:", this.state.selectedAthletes));
     } else {
-      updatedSelectedAthletes.push(athleteId);
-      this.setState({ selectedAthleteIDs: updatedSelectedAthletes }, () => console.log("now selected:", this.state.selectedAthleteIDs));
+      updatedSelectedAthletes.push(athleteName);
+      this.setState({ selectedAthletes: updatedSelectedAthletes }, () => console.log("now selected:", this.state.selectedAthletes));
     }
   }
 
+
   render(){
     const { lapCount, lapDistance, lapMetric } = this.props.navigation.state.params;
-    // console.log("lapCount", lapCount);
-    // console.log("lapDistance", lapDistance);
-    // console.log("lapMetric", lapMetric);
 
     return(
       <View style={styles.container}>
-        <ScrollView>
-          {this.createTeamList()}
-        </ScrollView>
-        <Button
-          title="start workout"
-          onPress={() => this.props.navigation.navigate(`Timer`, { lapCount: lapCount, lapDistance: lapDistance, lapMetric: lapMetric, athleteIDs: this.state.selectedAthleteIDs })} />
+        {this.state.showEmptyMessage &&
+          <Text>no current athletes</Text>
+        }
+        {!this.state.showEmptyMessage &&
+          <View>
+            <ScrollView>
+              {this.renderTeamList()}
+            </ScrollView>
+            <Button
+              title="start workout"
+              onPress={() => this.props.navigation.navigate(`Timer`, {
+                lapCount,
+                lapDistance,
+                lapMetric,
+                selectedAthletes: this.state.selectedAthletes
+              })}/>
+          </View>
+        }
       </View>
     )
   }
