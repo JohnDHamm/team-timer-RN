@@ -23,51 +23,52 @@ export default class ResultsList extends Component {
     const mockWorkoutsStore = {
       154638098800: {
         id: 154638098800,
-        description: "Jan 1 - 10x250m",
+        description: "Jan 1 - 3 x 250m",
         workout: [
           {
             athlete: "Bob",
-            laps: [ 2650000, 2623400, 2512341 ]
+            laps: [ 60000, 62340, 62341 ]
           },
           {
             athlete: "Derek",
-            laps: [ 2934000, 2905420, 2912331 ]
+            laps: [ 64000, 65420, 62331 ]
           },
           {
             athlete: "Stevie",
-            laps: [ 2700880, 2783420, 2745341 ]
+            laps: [ 60880, 63420, 65341 ]
           },
           {
             athlete: "Zoe",
-            laps: [ 21040002, 21033400, 21012341 ]
+            laps: [ 64002, 62340, 62341 ]
           },
         ]
       },
       1547676061798: {
         id: 1547676061798,
-        description: "Jan 16 - 5x100yd",
+        description: "Jan 16 - 4 x 100yd",
         workout: [
           {
             athlete: "Bob",
-            laps: [ 650000, 623400, 512341 ]
+            laps: [ 125000, 122300, 121241, 124363 ]
           },
           {
             athlete: "Derek",
-            laps: [ 934000, 905420, 912331 ]
+            laps: [ 124000, 125420, 123331, 122845 ]
           },
           {
             athlete: "Tara",
-            laps: [ 700880, 783420, 745341 ]
+            laps: [ 120880, 123420, 125341, 122980 ]
           },
           {
             athlete: "Zoe",
-            laps: [ 1040002, 1033400, 1012341 ]
+            laps: [ 3670000, 1033400, 1012341, 1035672 ]
           },
         ]
       },
     }
 
-    this.setState({ workouts: mockWorkoutsStore }, () => console.log("workouts:", this.state.workouts))
+    // this.setState({ workouts: mockWorkoutsStore }, () => console.log("workouts from store:", this.state.workouts))
+    this.setState({ workouts: mockWorkoutsStore });
   }
 
 
@@ -85,6 +86,7 @@ export default class ResultsList extends Component {
   }
 
   selectWorkout(workout) {
+    // console.log("selecting:", workout)
     this.props.navigation.navigate(`WorkoutDetail`, { selectedWorkout: workout });
   }
 
