@@ -33,7 +33,7 @@ export default class SelectAthletes extends Component {
 
   createTeamList(team) {
     // create alphabetical ordered list for display
-    console.log("team from store:", team);
+    // console.log("team from store:", team);
     const teamList = _.map(team, 'name');
     this.setState({teamList: teamList.sort()}); //temp
   }
@@ -61,10 +61,10 @@ export default class SelectAthletes extends Component {
   toggleAthlete(athleteName) {
     let updatedSelectedAthletes = this.state.selectedAthletes;
     if (updatedSelectedAthletes.includes(athleteName)) {
-      this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) }, () => console.log("now selected:", this.state.selectedAthletes));
+      this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) });
     } else {
       updatedSelectedAthletes.push(athleteName);
-      this.setState({ selectedAthletes: updatedSelectedAthletes }, () => console.log("now selected:", this.state.selectedAthletes));
+      this.setState({ selectedAthletes: updatedSelectedAthletes });
     }
   }
 
