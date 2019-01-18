@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 
+import TimeConversion from '../../utility/time_conversion';
 import _ from 'lodash';
 
 // import sharedStyles from '../../styles/sharedStyles';
@@ -17,7 +18,9 @@ export default class Timer extends Component {
       workoutData: {},
       description: "",
       timerOn: false,
-      startTime: null,
+      startTime: 0,
+      offset: 0,
+      interval: null,
       mainReadout: "0:00.0",
       lapsCompleted: 0,
       athletesArray: []
@@ -65,15 +68,27 @@ export default class Timer extends Component {
 
 
 
-
   cancelWorkout() {
     console.log("cancelling workout")
     this.props.navigation.goBack()
   }
 
   startTimer() {
-    this.setState({startTime: Date.now()})
+    const startTime = Date.now();
     this.setState({timerOn: true});
+    this.setState({offset: startTime});
+    this.setState({startTime}, () => {
+      this.setState({interval: setInterval(this.update.bind(this), 10)});
+    });
+
+  }
+
+  update() {
+    // main readout
+    const now = Date.now();
+    const timePassed = now - this.state.startTime;
+    const mainReadout = TimeConversion(timePassed);
+    this.setState({mainReadout});
   }
 
   recordLap(athleteIndex) {
@@ -108,9 +123,13 @@ export default class Timer extends Component {
     const lowestLap = currentLaps.sort(( a, b ) => a - b )[0];
     this.setState({lapsCompleted: lowestLap});
     if (lowestLap === this.state.workoutData.lapCount) {
-      // stop();
-      console.log("workout complete!!!")
+      this.stop();
     }
+  }
+
+  stop(){
+    console.log("workout complete!!!");
+    clearInterval(this.state.interval);
   }
 
 
