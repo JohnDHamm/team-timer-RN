@@ -19,6 +19,7 @@ export default class Timer extends Component {
       description: "",
       timerOn: false,
       startTime: 0,
+      time: 0,
       offset: 0,
       interval: null,
       mainReadout: "0:00.0",
@@ -59,7 +60,8 @@ export default class Timer extends Component {
         readout: "0:00.0",
         currentLap: 0,
         lapTimesArray: [0],
-        workoutDone: false
+        workoutDone: false,
+        elapsed: 0,
       };
       athletesArray.push(athleteObj);
     }
@@ -76,7 +78,7 @@ export default class Timer extends Component {
   startTimer() {
     const startTime = Date.now();
     this.setState({timerOn: true});
-    this.setState({offset: startTime});
+    // this.setState({offset: startTime});
     this.setState({startTime}, () => {
       this.setState({interval: setInterval(this.update.bind(this), 10)});
     });
@@ -86,16 +88,40 @@ export default class Timer extends Component {
   update() {
     // main readout
     const now = Date.now();
-    const timePassed = now - this.state.startTime;
-    const mainReadout = TimeConversion(timePassed);
+    const time = now - this.state.startTime;
+    this.setState({time});
+    const mainReadout = TimeConversion(time);
     this.setState({mainReadout});
+    // athlete readouts
+    for (i = 0; i < this.state.athletesArray.length; i++) {
+      const newLapTime = time - this.state.athletesArray[i].elapsed;
+      this.setState(prevState => ({
+        athletesArray: prevState.athletesArray.map(
+          obj => (obj.index === i ? Object.assign(obj, {readout: TimeConversion(newLapTime)}) : obj)
+        )
+      }));
+    }
   }
 
   recordLap(athleteIndex) {
     if (this.state.timerOn) {
       // console.log("athlete selected:", athleteIndex);
-      //update currentLap
       if (!this.state.athletesArray[athleteIndex].workoutDone) {
+        //save lap + reset elapsed
+        const thisLap = Date.now() - this.state.startTime;
+        let newLapArray = this.state.athletesArray[athleteIndex].lapTimesArray
+        newLapArray.push(thisLap);
+        this.setState(prevState => ({
+          athletesArray: prevState.athletesArray.map(
+            obj => (obj.index === athleteIndex ? Object.assign(obj, {lapTimesArray: newLapArray}) : obj)
+          )
+        }), () => this.setState(prevState => ({
+            athletesArray: prevState.athletesArray.map(
+              obj => (obj.index === athleteIndex ? Object.assign(obj, {elapsed: thisLap}) : obj)
+           )
+          }))
+        );
+        //update currentLap
         const newCurrentLap = this.state.athletesArray[athleteIndex].currentLap + 1;
         this.setState(prevState => ({
           athletesArray: prevState.athletesArray.map(
