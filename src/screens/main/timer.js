@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import TimeConversion from '../../utility/time_conversion';
 import _ from 'lodash';
@@ -156,6 +156,7 @@ export default class Timer extends Component {
   stop(){
     console.log("workout complete!!!");
     clearInterval(this.state.interval);
+
   }
 
 
@@ -183,7 +184,7 @@ export default class Timer extends Component {
   render(){
 
     return(
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text>{this.state.description}</Text>
         <Button
           title="cancel"
@@ -196,8 +197,7 @@ export default class Timer extends Component {
         <ScrollView>
           {this.renderAthleteButtons()}
         </ScrollView>
-
-      </View>
+      </SafeAreaView>
     )
   }
 }
