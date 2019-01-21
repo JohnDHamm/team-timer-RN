@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView, AsyncStorage } from 'react-native';
 
 import TimeConversion from '../../utility/time_conversion';
 import _ from 'lodash';
@@ -47,7 +47,7 @@ export default class Timer extends Component {
     const date = new Date(Date.now()).toDateString().split(" ");
     const month = date[1];
     const day = date[2];
-    console.log("workout data", this.state.workoutData)
+    // console.log("workout data", this.state.workoutData)
     this.setState({ description: `${month} ${day} - ${this.state.workoutData.lapCount} x ${this.state.workoutData.lapDistance}${this.state.workoutData.lapMetric}`})
   }
 
@@ -65,7 +65,7 @@ export default class Timer extends Component {
       };
       athletesArray.push(athleteObj);
     }
-    this.setState({athletesArray}, () => console.log("this.state.athletesArray", this.state.athletesArray));
+    this.setState({athletesArray});
   }
 
 
@@ -156,14 +156,48 @@ export default class Timer extends Component {
   stop(){
     console.log("workout complete!!!");
     clearInterval(this.state.interval);
+    this.saveWorkout();
 
   }
 
-
-  workoutComplete(workoutData) {
-    console.log("completed workout")
-    this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData })
+  saveWorkout() {
+    //create workout array
+    let workoutArray = [];
+      //each athlete -> create laps array
+    // console.log("athletes:", this.state.athletesArray);
+    this.state.athletesArray.forEach(athlete => {
+      let newAthObj = {
+        athlete: athlete.name,
+        laps: this.convertLapTimes(athlete.lapTimesArray)
+      }
+      // console.log("newAthObj", newAthObj);
+      workoutArray.push(newAthObj);
+    })
+    // console.log("workoutArray", workoutArray);
+    //create workout object to save
+    let newSaveObj = {
+      [this.state.startTime]: {
+        id: this.state.startTime,
+        description: this.state.description,
+        workout: workoutArray
+      }
+    }
+    // console.log("newSaveObj", newSaveObj);
+    //save Async
+    AsyncStorage.mergeItem('WorkoutStore', JSON.stringify(newSaveObj), (err, res) => {
+      AsyncStorage.getItem('WorkoutStore', (err, res) => console.log("res", JSON.parse(res)));
+      this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData })
+    });
   }
+
+  convertLapTimes(arr) {
+    const trueArray = [];
+    for (let i = 0; i < arr.length - 1; i++) {
+      trueArray.push(arr[i + 1] - arr[i]);
+    }
+    return trueArray;
+  }
+
 
   renderAthleteButtons() {
     return _.map(this.state.athletesArray, athlete => {
