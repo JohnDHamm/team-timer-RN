@@ -94,12 +94,14 @@ export default class Timer extends Component {
     this.setState({mainReadout});
     // athlete readouts
     for (i = 0; i < this.state.athletesArray.length; i++) {
-      const newLapTime = time - this.state.athletesArray[i].elapsed;
-      this.setState(prevState => ({
-        athletesArray: prevState.athletesArray.map(
-          obj => (obj.index === i ? Object.assign(obj, {readout: TimeConversion(newLapTime)}) : obj)
-        )
-      }));
+      if (!this.state.athletesArray[i].workoutDone) {
+        const newLapTime = time - this.state.athletesArray[i].elapsed;
+        this.setState(prevState => ({
+          athletesArray: prevState.athletesArray.map(
+            obj => (obj.index === i ? Object.assign(obj, {readout: TimeConversion(newLapTime)}) : obj)
+          )
+        }));
+      }
     }
   }
 
@@ -134,8 +136,13 @@ export default class Timer extends Component {
             athletesArray: prevState.athletesArray.map(
               obj => (obj.index === athleteIndex ? Object.assign(obj, {workoutDone: true}) : obj)
             )
-          }));
-        }
+          }), () => this.setState(prevState => ({
+              athletesArray: prevState.athletesArray.map(
+                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: 'done'}) : obj)
+              )
+            }))
+          )
+        };
       }
     }
   }
