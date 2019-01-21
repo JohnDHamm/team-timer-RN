@@ -8,10 +8,6 @@ import _ from 'lodash';
 
 export default class Timer extends Component {
 
-  // static navigationOptions = {
-  //   title: 'Timer',
-  // }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -20,20 +16,16 @@ export default class Timer extends Component {
       timerOn: false,
       startTime: 0,
       time: 0,
-      offset: 0,
       interval: null,
       mainReadout: "0:00.0",
       lapsCompleted: 0,
       athletesArray: []
-
     }
   }
 
   componentDidMount() {
     const { lapCount, lapDistance, lapMetric, selectedAthletes } = this.props.navigation.state.params;
-    // console.log("selectedAthletes", selectedAthletes);
     const sortedAthletes = selectedAthletes.sort();
-    // console.log("sortedAthletes", sortedAthletes);
     this.setState({workoutData: {lapCount, lapDistance, lapMetric}},
       () => this.setupTimer(sortedAthletes));
   }
@@ -47,7 +39,6 @@ export default class Timer extends Component {
     const date = new Date(Date.now()).toDateString().split(" ");
     const month = date[1];
     const day = date[2];
-    // console.log("workout data", this.state.workoutData)
     this.setState({ description: `${month} ${day} - ${this.state.workoutData.lapCount} x ${this.state.workoutData.lapDistance}${this.state.workoutData.lapMetric}`})
   }
 
@@ -68,8 +59,6 @@ export default class Timer extends Component {
     this.setState({athletesArray});
   }
 
-
-
   cancelWorkout() {
     console.log("cancelling workout")
     this.props.navigation.goBack()
@@ -78,7 +67,6 @@ export default class Timer extends Component {
   startTimer() {
     const startTime = Date.now();
     this.setState({timerOn: true});
-    // this.setState({offset: startTime});
     this.setState({startTime}, () => {
       this.setState({interval: setInterval(this.update.bind(this), 10)});
     });
@@ -86,13 +74,12 @@ export default class Timer extends Component {
   }
 
   update() {
-    // main readout
     const now = Date.now();
     const time = now - this.state.startTime;
     this.setState({time});
     const mainReadout = TimeConversion(time);
     this.setState({mainReadout});
-    // athlete readouts
+
     for (i = 0; i < this.state.athletesArray.length; i++) {
       if (!this.state.athletesArray[i].workoutDone) {
         const newLapTime = time - this.state.athletesArray[i].elapsed;
@@ -107,9 +94,7 @@ export default class Timer extends Component {
 
   recordLap(athleteIndex) {
     if (this.state.timerOn) {
-      // console.log("athlete selected:", athleteIndex);
       if (!this.state.athletesArray[athleteIndex].workoutDone) {
-        //save lap + reset elapsed
         const thisLap = Date.now() - this.state.startTime;
         let newLapArray = this.state.athletesArray[athleteIndex].lapTimesArray
         newLapArray.push(thisLap);
@@ -123,7 +108,7 @@ export default class Timer extends Component {
            )
           }))
         );
-        //update currentLap
+
         const newCurrentLap = this.state.athletesArray[athleteIndex].currentLap + 1;
         this.setState(prevState => ({
           athletesArray: prevState.athletesArray.map(
@@ -152,7 +137,6 @@ export default class Timer extends Component {
     for (let i = 0; i < this.state.athletesArray.length; i++) {
       currentLaps.push(this.state.athletesArray[i].currentLap)
     }
-    // console.log("currentLaps", currentLaps);
     const lowestLap = currentLaps.sort(( a, b ) => a - b )[0];
     this.setState({lapsCompleted: lowestLap});
     if (lowestLap === this.state.workoutData.lapCount) {
@@ -161,27 +145,19 @@ export default class Timer extends Component {
   }
 
   stop(){
-    console.log("workout complete!!!");
     clearInterval(this.state.interval);
     this.saveWorkout();
-
   }
 
   saveWorkout() {
-    //create workout array
     let workoutArray = [];
-      //each athlete -> create laps array
-    // console.log("athletes:", this.state.athletesArray);
     this.state.athletesArray.forEach(athlete => {
       let newAthObj = {
         athlete: athlete.name,
         laps: this.convertLapTimes(athlete.lapTimesArray)
       }
-      // console.log("newAthObj", newAthObj);
       workoutArray.push(newAthObj);
     })
-    // console.log("workoutArray", workoutArray);
-    //create workout object to save
     let newSaveObj = {
       [this.state.startTime]: {
         id: this.state.startTime,
@@ -189,10 +165,7 @@ export default class Timer extends Component {
         workout: workoutArray
       }
     }
-    // console.log("newSaveObj", newSaveObj);
-    //save Async
     AsyncStorage.mergeItem('WorkoutStore', JSON.stringify(newSaveObj), (err, res) => {
-      AsyncStorage.getItem('WorkoutStore', (err, res) => console.log("res", JSON.parse(res)));
       this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData })
     });
   }
@@ -204,7 +177,6 @@ export default class Timer extends Component {
     }
     return trueArray;
   }
-
 
   renderAthleteButtons() {
     return _.map(this.state.athletesArray, athlete => {
@@ -223,7 +195,6 @@ export default class Timer extends Component {
   }
 
   render(){
-
     return(
       <SafeAreaView style={styles.container}>
         <Text>{this.state.description}</Text>
