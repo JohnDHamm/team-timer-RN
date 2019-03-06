@@ -18,30 +18,48 @@ export default class AthleteEntry extends Component {
   };
 
   componentDidMount() {
-    const { team } = this.props.navigation.state.params;
+    // const { team } = this.props.navigation.state.params;
     // console.log("existing team", team);
   }
 
   saveAthlete() {
-    //check for name already existing?
     const { team } = this.props.navigation.state.params;
-    let updatedTeam = team;
+    //check for name already existing?
+    if (!this.checkDuplicateAthlete(team)) {
+      let updatedTeam = team;
+      const newAthlete = {
+        name: this.state.newName
+      };
 
-    const newAthlete = {
-      name: this.state.newName
-    };
+      updatedTeam.push(newAthlete);
+      // console.log("updatedTeam", updatedTeam);
 
-    updatedTeam.push(newAthlete);
-    // console.log("updatedTeam", updatedTeam);
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'TeamList'})]
+      })
 
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'TeamList'})]
-    })
+      AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeam))
+        .then(() => this.props.navigation.dispatch(resetAction));
 
-    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeam))
-      .then(() => this.props.navigation.dispatch(resetAction));
+    } else {
+      this.showErrMsg();
+    }
   }
+
+  checkDuplicateAthlete(team) {
+    const match = team.filter(athlete => athlete.name === this.state.newName);
+    // console.log("match", match);
+    if (match.length > 0) {
+      return true
+    };
+    return false;
+  }
+
+  showErrMsg() {
+    console.log("there is already an athlete with that name!")
+  }
+
 
   render(){
 
