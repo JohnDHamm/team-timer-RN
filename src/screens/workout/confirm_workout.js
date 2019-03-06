@@ -10,7 +10,7 @@ export default class ConfirmWorkout extends Component {
 
   static navigationOptions = {
     title: 'Confirm workout',
-    headerBackTitle: 'Athletes',
+    headerBackTitle: 'Confirm',
   };
 
   constructor(props) {
