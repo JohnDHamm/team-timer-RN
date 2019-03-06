@@ -84,7 +84,7 @@ export default class SelectAthletes extends Component {
             </ScrollView>
             <Button
               title="start workout"
-              onPress={() => this.props.navigation.navigate(`Timer`, {
+              onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
                 lapCount,
                 lapDistance,
                 lapMetric,

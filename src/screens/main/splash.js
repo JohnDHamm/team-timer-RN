@@ -6,6 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default class Splash extends Component {
 
   componentDidMount() {
+    //TODO: clear navigation history/reset stack to stop user from going back to here with right swipe
     setTimeout(() => this.props.navigation.navigate('MainApp'), 500);
   }
 
