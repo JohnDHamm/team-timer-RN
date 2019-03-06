@@ -38,7 +38,7 @@ export default class Timer extends Component {
   createDescription() {
     const date = new Date(Date.now()).toDateString().split(" ");
     const month = date[1];
-    const day = date[2];
+    const day = date[2].charAt(0) === "0" ? date[2].charAt(1) : date[2];
     this.setState({ description: `${month} ${day} - ${this.state.workoutData.lapCount} x ${this.state.workoutData.lapDistance}${this.state.workoutData.lapMetric}`})
   }
 
