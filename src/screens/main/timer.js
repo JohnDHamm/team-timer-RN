@@ -166,7 +166,7 @@ export default class Timer extends Component {
       }
     }
     AsyncStorage.mergeItem('WorkoutStore', JSON.stringify(newSaveObj), (err, res) => {
-      this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData })
+      this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData }) // TODO: are the params needed?
     });
   }
 

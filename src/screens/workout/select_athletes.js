@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native'
 
+import {NavigationEvents} from 'react-navigation'
+
 import _ from 'lodash';
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -23,12 +25,17 @@ export default class SelectAthletes extends Component {
 
   componentDidMount() {
     //get team list from AsyncStorage
+  }
+
+  getAthletes() {
+    console.log("onWillFocus - getAthletes")
     AsyncStorage.getItem('TeamStore')
       .then(response => {
         if (response !== null) {
           this.setState({showEmptyMessage: false}, () => this.createTeamList(JSON.parse(response)))
         }
       });
+
   }
 
   createTeamList(team) {
@@ -74,6 +81,9 @@ export default class SelectAthletes extends Component {
 
     return(
       <View style={styles.container}>
+        <NavigationEvents
+          onWillFocus={() => this.getAthletes()}
+        />
         {this.state.showEmptyMessage &&
           <Text>no current athletes</Text>
         }
@@ -83,8 +93,8 @@ export default class SelectAthletes extends Component {
               {this.renderTeamList()}
             </ScrollView>
             <Button
-              title="start workout"
-              onPress={() => this.props.navigation.navigate(`Timer`, {
+              title="confirm workout details ->"
+              onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
                 lapCount,
                 lapDistance,
                 lapMetric,
