@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
+import _ from 'lodash';
+
 // import sharedStyles from '../../styles/sharedStyles';
 
 export default class ConfirmWorkout extends Component {
@@ -21,9 +23,18 @@ export default class ConfirmWorkout extends Component {
   componentDidMount() {
   }
 
+  renderAthletes(athletes) {
+    const sortedAthletes = athletes.sort();
+    return _.map(sortedAthletes, athlete => {
+      return (
+        <Text key={athlete} style={styles.athleteName}>{athlete}</Text>
+      )
+    })
+  }
+
   startWorkout() {
     const { lapCount, lapDistance, lapMetric, selectedAthletes } = this.props.navigation.state.params;
-    this.setState({startButtonLabel: "do workout again"})
+    // this.setState({startButtonLabel: "do workout again"});
     this.props.navigation.navigate(`Timer`, {
       lapCount,
       lapDistance,
@@ -43,14 +54,13 @@ export default class ConfirmWorkout extends Component {
 
   render(){
     const { lapCount, lapDistance, lapMetric, selectedAthletes } = this.props.navigation.state.params;
-    console.log("selectedAthletes", selectedAthletes);
-    const athletesTotal = selectedAthletes.length;
 
     return(
       <View style={styles.container}>
         <View style={styles.detailsContainer}>
           <Text style={styles.details}>Laps: {lapCount} x {lapDistance}{lapMetric}</Text>
-          <Text style={styles.details}>{athletesTotal} athletes selected</Text>
+          <Text style={styles.details}>{selectedAthletes.length} athletes selected</Text>
+          {this.renderAthletes(selectedAthletes)}
         </View>
         <View style={styles.startButton}>
           <Button
@@ -73,10 +83,15 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     flex: .6,
+    alignItems: 'center',
     paddingTop: 20,
   },
   details: {
-    fontSize: 20
+    fontSize: 30
+  },
+  athleteName: {
+    fontSize: 20,
+    color: 'purple',
   },
   startButton: {
     flex: .2,

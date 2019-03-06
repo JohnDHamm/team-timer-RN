@@ -83,7 +83,7 @@ export default class SelectAthletes extends Component {
               {this.renderTeamList()}
             </ScrollView>
             <Button
-              title="start workout"
+              title="confirm workout details ->"
               onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
                 lapCount,
                 lapDistance,
