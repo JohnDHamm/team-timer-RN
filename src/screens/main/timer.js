@@ -166,7 +166,6 @@ export default class Timer extends Component {
       }
     }
     AsyncStorage.mergeItem('WorkoutStore', JSON.stringify(newSaveObj), (err, res) => {
-      // TODO: reset stack before pushing to ResultsList? so list is fully updated?
       this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData }) // TODO: are the params needed?
     });
   }
