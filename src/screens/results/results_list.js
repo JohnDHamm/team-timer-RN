@@ -15,7 +15,7 @@ export default class ResultsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      workouts: {},
+      workouts: [],
       showEmptyMessage: true
     }
   }
@@ -28,12 +28,17 @@ export default class ResultsList extends Component {
     AsyncStorage.getItem('WorkoutStore', (err, res) => {
       // console.log("Workout Store res", JSON.parse(res));
       if (res !== null) {
-        this.setState({workouts: JSON.parse(res)}, () => {
-          this.setState({showEmptyMessage: false});
-        });
+        this.sortList(JSON.parse(res));
       }
     });
+  }
 
+  sortList(workouts) {
+    const sortedList = _.sortBy(workouts, ['id']).reverse();
+    // console.log("sortedList", sortedList);
+    this.setState({workouts: sortedList}, () => {
+      this.setState({showEmptyMessage: false});
+    })
   }
 
   renderWorkouts() {
