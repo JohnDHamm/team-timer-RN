@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
 // import sharedStyles from '../../styles/sharedStyles';
@@ -13,7 +13,9 @@ export default class AthleteEntry extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newName: ""
+      newName: "",
+      showErrMsg: false,
+      errMsg: ""
     }
   };
 
@@ -58,7 +60,8 @@ export default class AthleteEntry extends Component {
   }
 
   showErrMsg() {
-    console.log("there is already an athlete with that name!")
+    // console.log("there is already an athlete with that name!")
+    this.setState({showErrMsg: true, errMsg: "That name already exists!"});
   }
 
 
@@ -66,9 +69,12 @@ export default class AthleteEntry extends Component {
 
     return(
       <View style={styles.container}>
+        {this.state.showErrMsg &&
+          <Text style={styles.errMsg}>{this.state.errMsg}</Text>
+        }
         <TextInput
           style={styles.textInput}
-          onChangeText={(newName) => this.setState({newName})}
+          onChangeText={(newName) => this.setState({newName, showErrMsg: false})}
           maxLength={10}
           autoFocus={true}
         />
@@ -86,6 +92,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+  errMsg: {
+	  fontSize: 20,
+	  color: 'red',
+    paddingBottom: 15,
+  },
   textInput: {
 	  height: 100,
     width: 260,
