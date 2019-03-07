@@ -5,6 +5,7 @@ import {NavigationActions, StackActions} from 'react-navigation'
 import _ from 'lodash';
 
 import Utils from '../../utility/utils'
+import StoreUtils from '../../utility/store_utils'
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -25,12 +26,12 @@ export default class TeamList extends Component {
   };
 
   componentDidMount() {
-    AsyncStorage.getItem('TeamStore')
-      .then(response => {
-        // console.log("teamStore", JSON.parse(response));
-        if (response !== null) {
-          this.setState({ teamStore: JSON.parse(response) }, () => {
-            this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
+    StoreUtils.getStore('TeamStore')
+      .then(teamStore => {
+        // console.log("teamStore", teamStore);
+        if (teamStore !== null) {
+          this.setState({teamStore}, () => {
+            this.setState({teamList: Utils.createTeamList(teamStore), showEmptyMessage: false})
           });
         }
       });
