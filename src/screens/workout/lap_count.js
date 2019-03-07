@@ -46,14 +46,14 @@ export default class LapCount extends Component {
             <View>
               <Text style={styles.lapCount}>{this.state.lapCount}</Text>
               <Button
-              title = "down"
-              onPress={() => this.handleCountChange("down")} />
+                title = "down"
+                onPress={() => this.handleCountChange("down")} />
               <Button
-              title="up"
-              onPress={() => this.handleCountChange("up")} />
+                title="up"
+                onPress={() => this.handleCountChange("up")} />
               <Button
-              title="distance ->"
-              onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})} />
+                title="distance ->"
+                onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})} />
             </View>
           )
         }
