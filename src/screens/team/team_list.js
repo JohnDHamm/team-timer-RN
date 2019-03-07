@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, Button, AsyncStorage, ScrollView, TouchableOpacity} from 'react-native'
+import {NavigationActions, StackActions} from 'react-navigation'
+
 import _ from 'lodash';
+
+import Utils from '../../utility/utils'
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -15,7 +19,7 @@ export default class TeamList extends Component {
     super(props);
     this.state = {
       showEmptyMessage: true,
-      team: [],
+      teamStore: {},
       teamList: []
     }
   };
@@ -25,30 +29,37 @@ export default class TeamList extends Component {
       .then(response => {
         // console.log("teamStore", JSON.parse(response));
         if (response !== null) {
-          this.setState({ team: JSON.parse(response) }, () => {
-            this.setState({showEmptyMessage: false}, () => this.createTeamList())
+          this.setState({ teamStore: JSON.parse(response) }, () => {
+            this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
           });
         }
       });
   }
 
-  createTeamList() {
-    let teamList = [];
-    // console.log(this.state.team);
-    this.state.team.forEach(athlete => teamList.push(athlete.name));
-    // console.log("teamList", teamList.sort());
-    this.setState({ teamList: teamList.sort() });
+  deleteAthlete(name) {
+    // console.log("selected ", name, " to delete");
+    // console.log("this.state.teamStore", this.state.teamStore)
+    let updatedTeamStore = this.state.teamStore;
+    delete updatedTeamStore[name];
+    // console.log("updatedTeamStore", updatedTeamStore);
+    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeamStore))
+      .then(() => {
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'TeamList' })],
+        });
+        this.props.navigation.dispatch(resetAction);
+      })
   }
 
   renderTeamList() {
-    return _.map(this.state.teamList, name => {
+    return _.map(this.state.teamList, athlete => {
       return (
-        <Text
-          key={name}
-          style={styles.athleteName}
-        >
-          {name}
-        </Text>
+        <TouchableOpacity
+          key={athlete.name}
+          onLongPress={() => this.deleteAthlete(athlete.name)}>
+          <Text style={styles.athleteName}>{athlete.name}</Text>
+        </TouchableOpacity>
       );
     })
   }
@@ -73,7 +84,7 @@ export default class TeamList extends Component {
         <Button title="DELETE ALL" onPress={() => this.deleteAllAthletes()}/>
         <Button
           title="ADD NEW ATHLETE"
-          onPress={() => this.props.navigation.navigate(`AthleteEntry`, { team: this.state.team})} />
+          onPress={() => this.props.navigation.navigate(`AthleteEntry`, { teamStore: this.state.teamStore})} />
       </View>
     )
   }
