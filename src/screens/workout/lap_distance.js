@@ -14,9 +14,19 @@ export default class LapDistance extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lapDistance: null
+      lapDistance: null,
+      disableNextButton: true
     }
   };
+
+  onInputChange(lapDistance) {
+    console.log("lapDistance", lapDistance)
+    if (lapDistance) {
+      this.setState({lapDistance, disableNextButton: false})
+    } else {
+      this.setState({disableNextButton: true})
+    }
+  }
 
   render(){
     const { lapCount } = this.props.navigation.state.params;
@@ -26,13 +36,14 @@ export default class LapDistance extends Component {
       <View style={styles.container}>
         <TextInput
           style={styles.textInput}
-          onChangeText={(lapDistance) => this.setState({lapDistance})}
+          onChangeText={(lapDistance) => this.onInputChange(lapDistance)}
           keyboardType='decimal-pad'
           maxLength={4}
           autoFocus={true}
         />
         <Button
           title="select measurement units ->"
+          disabled={this.state.disableNextButton}
           onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })} />
       </View>
     )

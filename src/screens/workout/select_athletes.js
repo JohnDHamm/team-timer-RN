@@ -21,6 +21,7 @@ export default class SelectAthletes extends Component {
       teamList: [],
       selectedAthletes: [],
       showEmptyMessage: true,
+      disableNextButton: true
     }
   }
 
@@ -61,10 +62,14 @@ export default class SelectAthletes extends Component {
   toggleAthlete(athleteName) {
     let updatedSelectedAthletes = this.state.selectedAthletes;
     if (updatedSelectedAthletes.includes(athleteName)) {
-      this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) });
+      this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) }, () => {
+        if (this.state.selectedAthletes.length < 1) {
+          this.setState({disableNextButton: true})
+        }
+      });
     } else {
       updatedSelectedAthletes.push(athleteName);
-      this.setState({ selectedAthletes: updatedSelectedAthletes });
+      this.setState({ selectedAthletes: updatedSelectedAthletes, disableNextButton: false });
     }
   }
 
@@ -87,6 +92,7 @@ export default class SelectAthletes extends Component {
             </ScrollView>
             <Button
               title="confirm workout details ->"
+              disabled={this.state.disableNextButton}
               onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
                 lapCount,
                 lapDistance,

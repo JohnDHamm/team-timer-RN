@@ -13,9 +13,14 @@ export default class LapMetric extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lapMetric: null
+      lapMetric: null,
+      disableNextButton: true
     }
   };
+
+  onSelection(metric) {
+    this.setState({lapMetric: metric, disableNextButton: false})
+  }
 
   render(){
     const { lapCount, lapDistance } = this.props.navigation.state.params;
@@ -28,25 +33,26 @@ export default class LapMetric extends Component {
         <Button
           title={"YARDS"}
           style={styles.button}
-          onPress={() => this.setState({lapMetric: "yd"})}
+          onPress={() => this.onSelection("yd")}
         />
         <Button
           title={"MILES"}
           style={styles.button}
-          onPress={() => this.setState({lapMetric: "mi"})}
+          onPress={() => this.onSelection("mi")}
         />
         <Button
           title={"METERS"}
           style={styles.button}
-          onPress={() => this.setState({lapMetric: "m"})}
+          onPress={() => this.onSelection("m")}
         />
         <Button
           title={"KILOMETERS"}
           style={styles.button}
-          onPress={() => this.setState({lapMetric: "km"})}
+          onPress={() => this.onSelection("km")}
         />
         <Button
           title="select athletes ->"
+          disabled={this.state.disableNextButton}
           onPress={() => this.props.navigation.navigate(`SelectAthletes`, { lapCount: lapCount, lapDistance: lapDistance, lapMetric: this.state.lapMetric })} />
       </View>
     )
