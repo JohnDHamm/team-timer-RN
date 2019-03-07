@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, Button, AsyncStorage, ScrollView, TouchableOpacity} from 'react-native'
+import {NavigationActions, StackActions} from 'react-navigation'
 
 import _ from 'lodash';
+
+import Utils from '../../utility/utils'
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -27,16 +30,26 @@ export default class TeamList extends Component {
         // console.log("teamStore", JSON.parse(response));
         if (response !== null) {
           this.setState({ teamStore: JSON.parse(response) }, () => {
-            this.setState({showEmptyMessage: false}, () => this.createTeamList())
+            this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
           });
         }
       });
   }
 
-  createTeamList() {
-    const teamList = _.sortBy(_.map(this.state.teamStore), 'name');
-    // console.log("teamList", teamList);
-    this.setState({ teamList });
+  deleteAthlete(name) {
+    // console.log("selected ", name, " to delete");
+    // console.log("this.state.teamStore", this.state.teamStore)
+    let updatedTeamStore = this.state.teamStore;
+    delete updatedTeamStore[name];
+    // console.log("updatedTeamStore", updatedTeamStore);
+    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeamStore))
+      .then(() => {
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'TeamList' })],
+        });
+        this.props.navigation.dispatch(resetAction);
+      })
   }
 
   renderTeamList() {
@@ -44,9 +57,7 @@ export default class TeamList extends Component {
       return (
         <TouchableOpacity
           key={athlete.name}
-          onLongPress={() => {
-            console.log("selected ", athlete.name, " to delete")
-          }}>
+          onLongPress={() => this.deleteAthlete(athlete.name)}>
           <Text style={styles.athleteName}>{athlete.name}</Text>
         </TouchableOpacity>
       );

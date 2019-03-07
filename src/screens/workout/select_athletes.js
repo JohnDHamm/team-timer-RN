@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native'
-
 import {NavigationEvents} from 'react-navigation'
 
 import _ from 'lodash';
+
+import Utils from '../../utility/utils'
+
 // import sharedStyles from '../../styles/sharedStyles';
 
 export default class SelectAthletes extends Component {
@@ -16,7 +18,6 @@ export default class SelectAthletes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // team: [],
       teamList: [],
       selectedAthletes: [],
       showEmptyMessage: true,
@@ -24,7 +25,6 @@ export default class SelectAthletes extends Component {
   }
 
   componentDidMount() {
-    //get team list from AsyncStorage
   }
 
   getAthletes() {
@@ -32,17 +32,11 @@ export default class SelectAthletes extends Component {
     AsyncStorage.getItem('TeamStore')
       .then(response => {
         if (response !== null) {
-          this.setState({showEmptyMessage: false}, () => this.createTeamList(JSON.parse(response)))
+          this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
         }
       });
-
   }
 
-  createTeamList(teamStore) {
-    // console.log("team from store:", team);
-    const teamList = _.sortBy(_.map(teamStore), 'name');
-    this.setState({teamList});
-  }
 
   renderTeamList() {
     if (!this.state.teamList) return;
