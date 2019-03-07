@@ -18,20 +18,21 @@ export default class AthleteEntry extends Component {
   };
 
   componentDidMount() {
-    // const { team } = this.props.navigation.state.params;
-    // console.log("existing team", team);
+    // const { teamStore } = this.props.navigation.state.params;
+    // console.log("existing teamStore", teamStore);
   }
 
   saveAthlete() {
-    const { team } = this.props.navigation.state.params;
-    //check for name already existing?
-    if (!this.checkDuplicateAthlete(team)) {
-      let updatedTeam = team;
+    const { teamStore } = this.props.navigation.state.params;
+    // console.log("existing teamStore", teamStore);
+    if (!this.checkDuplicateAthlete(teamStore)) {
+      let updatedTeam = teamStore;
+
       const newAthlete = {
         name: this.state.newName
       };
 
-      updatedTeam.push(newAthlete);
+      updatedTeam[this.state.newName] = newAthlete;
       // console.log("updatedTeam", updatedTeam);
 
       const resetAction = StackActions.reset({
@@ -47,9 +48,9 @@ export default class AthleteEntry extends Component {
     }
   }
 
-  checkDuplicateAthlete(team) {
-    const match = team.filter(athlete => athlete.name === this.state.newName);
-    // console.log("match", match);
+  checkDuplicateAthlete(teamStore) {
+    const teamNames = Object.keys(teamStore);
+    const match = teamNames.filter(name => name === this.state.newName);
     if (match.length > 0) {
       return true
     };

@@ -38,24 +38,23 @@ export default class SelectAthletes extends Component {
 
   }
 
-  createTeamList(team) {
-    // create alphabetical ordered list for display
+  createTeamList(teamStore) {
     // console.log("team from store:", team);
-    const teamList = _.map(team, 'name');
-    this.setState({teamList: teamList.sort()}); //temp
+    const teamList = _.sortBy(_.map(teamStore), 'name');
+    this.setState({teamList});
   }
 
   renderTeamList() {
     if (!this.state.teamList) return;
 
-    return _.map(this.state.teamList, name => {
-      const selected = this.checkSelected(name);
+    return _.map(this.state.teamList, athlete => {
+      const selected = this.checkSelected(athlete.name);
       return (
         <TouchableOpacity
-          key={name}
-          onPress={() => this.toggleAthlete(name)}
+          key={athlete.name}
+          onPress={() => this.toggleAthlete(athlete.name)}
         >
-          <Text style={selected ? styles.athleteName : styles.athleteNameUnselected}>{name}</Text>
+          <Text style={selected ? styles.athleteName : styles.athleteNameUnselected}>{athlete.name}</Text>
         </TouchableOpacity>
       );
     })
