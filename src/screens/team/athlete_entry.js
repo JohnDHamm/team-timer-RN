@@ -81,6 +81,9 @@ export default class AthleteEntry extends Component {
         <Button
           title="SAVE ATHLETE"
           onPress={() => this.saveAthlete()} />
+        <Button
+          title="cancel"
+          onPress={() => this.props.navigation.goBack()} />
       </View>
     )
   }
