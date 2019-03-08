@@ -15,6 +15,13 @@ const StoreUtils = {
       console.log(error.message);
     }
   },
+  mergeStore: async (storeKey, value) => {
+    try {
+      return await AsyncStorage.mergeItem(storeKey, JSON.stringify(value));
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
 
 };
 
