@@ -1,4 +1,3 @@
-import {AsyncStorage} from 'react-native';
 import _ from 'lodash'
 
 const Utils = {

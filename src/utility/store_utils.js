@@ -8,7 +8,13 @@ const StoreUtils = {
       console.log(error.message);
     }
   },
-
+  setStore: async (storeKey, value) => {
+    try {
+      return await AsyncStorage.setItem(storeKey, JSON.stringify(value));
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
 
 };
 

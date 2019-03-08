@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStor
 import { NavigationEvents } from 'react-navigation';
 
 import _ from 'lodash';
+
+import StoreUtils from '../../utility/store_utils';
+
 // import sharedStyles from '../../styles/sharedStyles';
 
 export default class ResultsList extends Component {
@@ -25,12 +28,12 @@ export default class ResultsList extends Component {
 
   getResults(){
     // console.log("onWillFocus - getResults");
-    AsyncStorage.getItem('WorkoutStore', (err, res) => {
-      // console.log("Workout Store res", JSON.parse(res));
-      if (res !== null) {
-        this.sortList(JSON.parse(res));
-      }
-    });
+    StoreUtils.getStore('WorkoutStore')
+      .then(res => {
+        if (res !== null) {
+          this.sortList(res);
+        }
+      })
   }
 
   sortList(workouts) {

@@ -4,8 +4,8 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import _ from 'lodash';
 
-import Utils from '../../utility/utils'
-import StoreUtils from '../../utility/store_utils'
+import Utils from '../../utility/utils';
+import StoreUtils from '../../utility/store_utils';
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -43,7 +43,7 @@ export default class TeamList extends Component {
     let updatedTeamStore = this.state.teamStore;
     delete updatedTeamStore[name];
     // console.log("updatedTeamStore", updatedTeamStore);
-    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeamStore))
+    StoreUtils.setStore('TeamStore', updatedTeamStore)
       .then(() => {
         const resetAction = StackActions.reset({
           index: 0,
