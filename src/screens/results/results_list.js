@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView
+} from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 
 import _ from 'lodash';
@@ -63,10 +64,13 @@ export default class ResultsList extends Component {
 
   // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING
   deleteAllWorkouts() {
-    AsyncStorage.removeItem('WorkoutStore', () => {
-      console.log("removed all workouts");
-      this.setState({workouts: {}, showEmptyMessage: true});
-    });
+    if (this.state.workouts.length > 0) {
+      StoreUtils.removeStore('WorkoutStore')
+        .then(() => {
+          // console.log("removed all workouts");
+          this.setState({workouts: {}, showEmptyMessage: true});
+        })
+    }
   }
 
   render(){
@@ -81,7 +85,9 @@ export default class ResultsList extends Component {
         <ScrollView>
           {this.renderWorkouts()}
         </ScrollView>
-        <Button title="DELETE ALL" onPress={() => this.deleteAllWorkouts()}/>
+        <Button
+          title="DELETE ALL"
+          onPress={() => this.deleteAllWorkouts()}/>
       </View>
     )
   }

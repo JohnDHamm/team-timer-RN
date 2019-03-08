@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, AsyncStorage, ScrollView, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, Button, ScrollView, TouchableOpacity} from 'react-native'
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import _ from 'lodash';
@@ -67,8 +67,13 @@ export default class TeamList extends Component {
 
   // THIS IS TEMPORARY TO CHECK EMPTY TEAM MESSAGE
   deleteAllAthletes() {
-    AsyncStorage.removeItem('TeamStore', () => console.log("removed all athletes"));
-    //if keeping this, add a stack reset
+    if (this.state.teamList.length > 0) {
+      StoreUtils.removeStore('TeamStore')
+        .then(() => {
+          // console.log("removed all athletes");
+          this.setState({teamList: [], showEmptyMessage: true})
+        })
+    }
   }
 
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
 import StoreUtils from '../../utility/store_utils';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import TimeConversion from '../../utility/time_conversion';
 import StoreUtils from '../../utility/store_utils';
