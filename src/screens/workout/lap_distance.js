@@ -20,7 +20,6 @@ export default class LapDistance extends Component {
   };
 
   onInputChange(lapDistance) {
-    console.log("lapDistance", lapDistance)
     if (lapDistance) {
       this.setState({lapDistance, disableNextButton: false})
     } else {

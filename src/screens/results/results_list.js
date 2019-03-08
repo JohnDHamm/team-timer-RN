@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView
+} from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 
 import _ from 'lodash';
+
+import StoreUtils from '../../utility/store_utils';
+
 // import sharedStyles from '../../styles/sharedStyles';
 
 export default class ResultsList extends Component {
@@ -25,12 +29,12 @@ export default class ResultsList extends Component {
 
   getResults(){
     // console.log("onWillFocus - getResults");
-    AsyncStorage.getItem('WorkoutStore', (err, res) => {
-      // console.log("Workout Store res", JSON.parse(res));
-      if (res !== null) {
-        this.sortList(JSON.parse(res));
-      }
-    });
+    StoreUtils.getStore('WorkoutStore')
+      .then(res => {
+        if (res !== null) {
+          this.sortList(res);
+        }
+      })
   }
 
   sortList(workouts) {
@@ -60,10 +64,13 @@ export default class ResultsList extends Component {
 
   // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING
   deleteAllWorkouts() {
-    AsyncStorage.removeItem('WorkoutStore', () => {
-      console.log("removed all workouts");
-      this.setState({workouts: {}, showEmptyMessage: true});
-    });
+    if (this.state.workouts.length > 0) {
+      StoreUtils.removeStore('WorkoutStore')
+        .then(() => {
+          // console.log("removed all workouts");
+          this.setState({workouts: {}, showEmptyMessage: true});
+        })
+    }
   }
 
   render(){
@@ -78,7 +85,9 @@ export default class ResultsList extends Component {
         <ScrollView>
           {this.renderWorkouts()}
         </ScrollView>
-        <Button title="DELETE ALL" onPress={() => this.deleteAllWorkouts()}/>
+        <Button
+          title="DELETE ALL"
+          onPress={() => this.deleteAllWorkouts()}/>
       </View>
     )
   }

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native'
+import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import _ from 'lodash';
 
 import Utils from '../../utility/utils'
+import StoreUtils from '../../utility/store_utils'
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -30,10 +31,10 @@ export default class SelectAthletes extends Component {
 
   getAthletes() {
     console.log("onWillFocus - getAthletes")
-    AsyncStorage.getItem('TeamStore')
-      .then(response => {
-        if (response !== null) {
-          this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
+    StoreUtils.getStore('TeamStore')
+      .then(teamStore => {
+        if (teamStore !== null) {
+          this.setState({teamList: Utils.createTeamList(teamStore), showEmptyMessage: false})
         }
       });
   }

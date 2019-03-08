@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, AsyncStorage, ScrollView, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, Button, ScrollView, TouchableOpacity} from 'react-native'
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import _ from 'lodash';
 
-import Utils from '../../utility/utils'
+import Utils from '../../utility/utils';
+import StoreUtils from '../../utility/store_utils';
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -25,12 +26,12 @@ export default class TeamList extends Component {
   };
 
   componentDidMount() {
-    AsyncStorage.getItem('TeamStore')
-      .then(response => {
-        // console.log("teamStore", JSON.parse(response));
-        if (response !== null) {
-          this.setState({ teamStore: JSON.parse(response) }, () => {
-            this.setState({teamList: Utils.createTeamList(JSON.parse(response)), showEmptyMessage: false})
+    StoreUtils.getStore('TeamStore')
+      .then(teamStore => {
+        // console.log("teamStore", teamStore);
+        if (teamStore !== null) {
+          this.setState({teamStore}, () => {
+            this.setState({teamList: Utils.createTeamList(teamStore), showEmptyMessage: false})
           });
         }
       });
@@ -42,7 +43,7 @@ export default class TeamList extends Component {
     let updatedTeamStore = this.state.teamStore;
     delete updatedTeamStore[name];
     // console.log("updatedTeamStore", updatedTeamStore);
-    AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeamStore))
+    StoreUtils.setStore('TeamStore', updatedTeamStore)
       .then(() => {
         const resetAction = StackActions.reset({
           index: 0,
@@ -66,8 +67,13 @@ export default class TeamList extends Component {
 
   // THIS IS TEMPORARY TO CHECK EMPTY TEAM MESSAGE
   deleteAllAthletes() {
-    AsyncStorage.removeItem('TeamStore', () => console.log("removed all athletes"));
-    //if keeping this, add a stack reset
+    if (this.state.teamList.length > 0) {
+      StoreUtils.removeStore('TeamStore')
+        .then(() => {
+          // console.log("removed all athletes");
+          this.setState({teamList: [], showEmptyMessage: true})
+        })
+    }
   }
 
 

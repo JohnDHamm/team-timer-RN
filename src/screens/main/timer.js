@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import TimeConversion from '../../utility/time_conversion';
+import StoreUtils from '../../utility/store_utils';
+
 import _ from 'lodash';
 
 // import sharedStyles from '../../styles/sharedStyles';
@@ -165,9 +167,10 @@ export default class Timer extends Component {
         workout: workoutArray
       }
     }
-    AsyncStorage.mergeItem('WorkoutStore', JSON.stringify(newSaveObj), (err, res) => {
-      this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData }) // TODO: are the params needed?
-    });
+    StoreUtils.mergeStore('WorkoutStore', newSaveObj)
+      .then(() => {
+        this.props.navigation.navigate('ResultsList', { workoutData: this.state.workoutData }) // TODO: are the params needed?
+      })
   }
 
   convertLapTimes(arr) {

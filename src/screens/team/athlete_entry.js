@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
+
+import StoreUtils from '../../utility/store_utils';
 
 // import sharedStyles from '../../styles/sharedStyles';
 
@@ -42,7 +44,7 @@ export default class AthleteEntry extends Component {
         actions: [NavigationActions.navigate({ routeName: 'TeamList'})]
       })
 
-      AsyncStorage.setItem('TeamStore', JSON.stringify(updatedTeam))
+      StoreUtils.setStore('TeamStore', updatedTeam)
         .then(() => this.props.navigation.dispatch(resetAction));
 
     } else {
