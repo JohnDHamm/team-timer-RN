@@ -27,7 +27,7 @@ const appHeaderOptions = {
 
 const TeamStack = createStackNavigator( Routes.TeamRoutes,
   { initialRouteName: 'TeamList',
-    navigationOptions: appHeaderOptions,
+    defaultNavigationOptions: appHeaderOptions,
   }
 )
 
@@ -39,7 +39,7 @@ const WorkoutStack = createStackNavigator( Routes.WorkoutRoutes,
 
 const ResultsStack = createStackNavigator( Routes.ResultsRoutes,
   { initialRouteName: 'ResultsList',
-    navigationOptions: appHeaderOptions,
+    defaultNavigationOptions: appHeaderOptions,
   }
 )
 

@@ -7,6 +7,11 @@ const y = Dimensions.get('window').height;
 
 export default sharedStyles = {
 
+  // GENERAL
+  DEVICE_WIDTH: x,
+  DEVICE_HEIGHT: y,
+
+  // COLORS
   COLOR_GREEN: "#BADA55",
   COLOR_PURPLE: "#6E5EAB",
   COLOR_DARK_BLUE: "#0B163B",
@@ -17,6 +22,7 @@ export default sharedStyles = {
 
 
 
+  // FONTS
   FONT_PRIMARY_REGULAR: "Dosis Regular",
   // FONT_PRIMARY_LIGHT: "",
   // FONT_PRIMARY_MEDIUM: "",
