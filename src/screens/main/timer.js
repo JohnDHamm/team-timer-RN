@@ -6,7 +6,7 @@ import StoreUtils from '../../utility/store_utils';
 
 import _ from 'lodash';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
 
 export default class Timer extends Component {
 
@@ -222,7 +222,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		// justifyContent: 'center',
 		alignItems: 'center',
-    paddingTop: 20
+    paddingTop: 20,
+    backgroundColor: sharedStyles.COLOR_GREEN,
 	},
   mainReadout: {
 	  fontSize: 40,
