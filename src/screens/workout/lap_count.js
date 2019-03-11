@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
 
 export default class LapCount extends Component {
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
   lapCount: {
-	  color: 'purple',
+	  color: sharedStyles.COLOR_PURPLE,
     fontSize: 250
   }
 });

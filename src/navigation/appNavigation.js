@@ -7,21 +7,21 @@ import Splash from '../screens/main/splash';
 import Timer from '../screens/main/timer';
 
 // import Images from '@assets/images'
-// import sharedStyles from '../styles/sharedStyles';
+import sharedStyles from '../styles/shared_styles';
 
 const appHeaderOptions = {
   headerStyle: {
-    backgroundColor: '#000',
+    backgroundColor: sharedStyles.COLOR_DARK_BLUE,
   },
   headerTitleStyle: {
-    color: 'white',
-    fontWeight: '800',
+    color: sharedStyles.COLOR_GREEN,
+    // fontWeight: '800',
   },
   headerBackTitleStyle: {
-    // color: sharedStyles.COLOR_HEADER_GRAY,
+    color: sharedStyles.COLOR_LIGHT_BLUE,
     fontSize: 14,
   },
-  // headerTintColor: sharedStyles.COLOR_HEADER_GRAY,
+  headerTintColor: sharedStyles.COLOR_LIGHT_BLUE,
 }
 
 
@@ -33,7 +33,7 @@ const TeamStack = createStackNavigator( Routes.TeamRoutes,
 
 const WorkoutStack = createStackNavigator( Routes.WorkoutRoutes,
   { initialRouteName: 'LapCount',
-    navigationOptions: appHeaderOptions,
+    defaultNavigationOptions: appHeaderOptions,
   }
 )
 
@@ -48,10 +48,10 @@ const TabNavConfig = {
   swipeEnabled: false,
   tabBarOptions: {
     showLabel: true,
-    // inactiveTintColor: '#c1b120',
-    // activeTintColor: sharedStyles.COLOR_AERO_YELLOW,
+    inactiveTintColor: sharedStyles.COLOR_LIGHT_BLUE,
+    activeTintColor: sharedStyles.COLOR_GREEN,
     style: {
-      backgroundColor: '#000',
+      backgroundColor: sharedStyles.COLOR_DARK_BLUE,
     },
   }
 }
