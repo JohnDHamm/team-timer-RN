@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   textInput: {
-	  width: 200,
+	  width: 220,
 	  height: 100,
     fontSize: 100,
     color: sharedStyles.COLOR_GREEN,
-    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontFamily: sharedStyles.FONT_PRIMARY_SEMIBOLD,
   },
   nextContainer: {
     alignSelf: 'stretch',

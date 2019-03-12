@@ -54,6 +54,7 @@ export default sharedStyles = {
   FONT_PRIMARY_REGULAR: "dosis-regular",
   FONT_PRIMARY_LIGHT: "dosis-light",
   FONT_PRIMARY_MEDIUM: "dosis-medium",
+  FONT_PRIMARY_SEMIBOLD: "dosis-semiBold",
 
 
 

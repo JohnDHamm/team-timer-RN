@@ -11,6 +11,7 @@ export default class Splash extends Component {
       'dosis-regular': require('../../../assets/fonts/Dosis-Regular.ttf'),
       'dosis-medium': require('../../../assets/fonts/Dosis-Medium.ttf'),
       'dosis-light': require('../../../assets/fonts/Dosis-Light.ttf'),
+      'dosis-semiBold': require('../../../assets/fonts/Dosis-SemiBold.ttf'),
     })
     //TODO: clear navigation history/reset stack to stop user from going back to here with right swipe
     setTimeout(() => this.props.navigation.navigate('MainApp'), 500);
