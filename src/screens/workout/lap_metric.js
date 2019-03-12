@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 export default class LapMetric extends Component {
 
   static navigationOptions = {
-    title: 'Measurement Unit?',
+    title: 'Measurement unit?',
     headerBackTitle: 'Metric',
   }
 
