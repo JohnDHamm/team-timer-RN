@@ -49,13 +49,14 @@ export default sharedStyles = {
   COLOR_WHITE: "#FFFFFF",
 
 
-
   // FONTS
   FONT_PRIMARY_REGULAR: "dosis-regular",
   FONT_PRIMARY_LIGHT: "dosis-light",
   FONT_PRIMARY_MEDIUM: "dosis-medium",
   FONT_PRIMARY_SEMIBOLD: "dosis-semiBold",
 
+  // MESSAGES
+  EMPTY_TEAM_MESSAGE: "There are no athletes currently entered for your team!",
 
   // TEMP FOR TESTING LAYOUTS
   TEMP_BORDER: {
