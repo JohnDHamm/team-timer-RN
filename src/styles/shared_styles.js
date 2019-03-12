@@ -57,6 +57,12 @@ export default sharedStyles = {
   FONT_PRIMARY_SEMIBOLD: "dosis-semiBold",
 
 
+  // TEMP FOR TESTING LAYOUTS
+  TEMP_BORDER: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderStyle: 'dotted',
+  }
 
 
 

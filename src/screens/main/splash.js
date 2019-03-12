@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
 
 export default class Splash extends Component {
 
@@ -20,7 +20,7 @@ export default class Splash extends Component {
   render(){
     return(
       <View style={styles.container}>
-        <Text>Splash screen</Text>
+        <Text style={styles.title}>Team Timer</Text>
       </View>
     )
   }
@@ -31,5 +31,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-	}
+    backgroundColor: sharedStyles.COLOR_DARK_BLUE,
+	},
+  title: {
+    fontWeight: "200",
+    color: sharedStyles.COLOR_GREEN,
+    fontSize: 40,
+  }
 });
