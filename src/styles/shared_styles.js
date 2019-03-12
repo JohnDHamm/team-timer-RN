@@ -13,8 +13,9 @@ export default sharedStyles = {
 
   // MEASUREMENTS
 
+
   // LAYOUT
-  LAYOUT_MAIN_CONTAINER: {
+  LAYOUT_MAIN_STRETCH: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
@@ -22,6 +23,19 @@ export default sharedStyles = {
     paddingHorizontal: 20,
     paddingBottom: 25,
     paddingTop: 20,
+  },
+  LAYOUT_MAIN_CENTER: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 25,
+    paddingTop: 20,
+  },
+  LAYOUT_NEXT_BUTTON_CONTAINER: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
 
 

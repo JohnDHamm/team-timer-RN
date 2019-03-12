@@ -34,8 +34,7 @@ export default class LapDistance extends Component {
     // console.log("lapCount", lapCount);
 
     return(
-      <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-        <View style={{flex: 0.5}}>
+      <KeyboardAvoidingView style={sharedStyles.LAYOUT_MAIN_CENTER} behavior={'padding'}>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -46,10 +45,11 @@ export default class LapDistance extends Component {
             autoFocus={true}
           />
         </View>
-        <NextButton
-          label={'units'}
-          disabled={this.state.disableNextButton}
-          onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })}/>
+        <View style={styles.nextContainer}>
+          <NextButton
+            label={'units'}
+            disabled={this.state.disableNextButton}
+            onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })}/>
         </View>
       </KeyboardAvoidingView>
     )
@@ -57,16 +57,12 @@ export default class LapDistance extends Component {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
   inputContainer: {
     borderColor: sharedStyles.COLOR_PURPLE,
     borderWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 5,
+    marginBottom: 40,
   },
   textInput: {
 	  width: 200,
@@ -74,5 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 100,
     color: sharedStyles.COLOR_GREEN,
     fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+  },
+  nextContainer: {
+    alignSelf: 'stretch',
+    alignItems: 'flex-end',
   }
 });

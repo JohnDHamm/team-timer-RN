@@ -39,7 +39,7 @@ export default class LapCount extends Component {
   render(){
 
     return(
-      <View style={sharedStyles.LAYOUT_MAIN_CONTAINER}>
+      <View style={sharedStyles.LAYOUT_MAIN_STRETCH}>
         <View style={{flex: 1}}>
           <View style={styles.topContainer}>
             <Text style={styles.lapCount}>{this.state.lapCount}</Text>
@@ -60,7 +60,7 @@ export default class LapCount extends Component {
                 style={styles.upArrow}/>
             </TouchableOpacity>
           </View>
-          <View style={styles.bottomContainer}>
+          <View style={[{flex: 0.1}, sharedStyles.LAYOUT_NEXT_BUTTON_CONTAINER]}>
             <NextButton
               label={'distance'}
               disabled={false}
@@ -95,10 +95,5 @@ const styles = StyleSheet.create({
   },
   downArrow: {
     transform: [{rotate: '180deg'}],
-  },
-  bottomContainer: {
-	  flex: 0.1,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
   }
 });
