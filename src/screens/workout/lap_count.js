@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, Image } from 'react-native';
 
 import sharedStyles from '../../styles/shared_styles';
+import IMAGES from '@assets/images'
 
 export default class LapCount extends Component {
 
@@ -54,6 +55,9 @@ export default class LapCount extends Component {
               <Button
                 title="distance ->"
                 onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})} />
+              <Image
+                source={IMAGES.NEXT_ARROW}
+                style={styles.nextArrow}/>
             </View>
           )
         }
@@ -61,6 +65,7 @@ export default class LapCount extends Component {
     )
   }
 }
+
 
 const styles = StyleSheet.create({
 	container: {
@@ -70,6 +75,11 @@ const styles = StyleSheet.create({
 	},
   lapCount: {
 	  color: sharedStyles.COLOR_PURPLE,
-    fontSize: 250
+    fontSize: 250,
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+  },
+  nextArrow: {
+	  width: 40,
+    height: 40 / IMAGES.NEXT_ARROW_ASPECT,
   }
 });

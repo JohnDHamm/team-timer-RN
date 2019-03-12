@@ -11,6 +11,9 @@ export default sharedStyles = {
   DEVICE_WIDTH: x,
   DEVICE_HEIGHT: y,
 
+  // MEASUREMENTS
+
+
   // COLORS
   COLOR_GREEN: "#BADA55",
   COLOR_PURPLE: "#6E5EAB",
@@ -23,10 +26,9 @@ export default sharedStyles = {
 
 
   // FONTS
-  FONT_PRIMARY_REGULAR: "Dosis Regular",
-  // FONT_PRIMARY_LIGHT: "",
-  // FONT_PRIMARY_MEDIUM: "",
-
+  FONT_PRIMARY_REGULAR: "dosis-regular",
+  FONT_PRIMARY_LIGHT: "dosis-light",
+  FONT_PRIMARY_MEDIUM: "dosis-medium",
 
 
 
