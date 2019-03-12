@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import sharedStyles from '../../styles/shared_styles';
 import IMAGES from '@assets/images'
+
+import NextButton from '../../components/next_button';
+
+const MAX_LAPS = 99;
 
 export default class LapCount extends Component {
 
@@ -14,14 +18,9 @@ export default class LapCount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lapCount: 2,
-      showEmptyMessage: false
+      lapCount: 5
     }
   };
-
-  componentDidMount() {
-    //check for empty team
-  }
 
   handleCountChange(direction) {
     let newCount;
@@ -30,7 +29,7 @@ export default class LapCount extends Component {
       if (this.state.lapCount < 2) return;
       newCount = this.state.lapCount - 1;
     } else {
-      if (this.state.lapCount > 9) return;
+      if (this.state.lapCount > (MAX_LAPS - 1)) return;
       newCount = this.state.lapCount + 1;
     }
 
@@ -40,46 +39,65 @@ export default class LapCount extends Component {
   render(){
 
     return(
-      <View style={styles.container}>
-        {this.state.showEmptyMessage ?
-          <Text>no team!</Text>
-          : (
-            <View>
-              <Text style={styles.lapCount}>{this.state.lapCount}</Text>
-              <Button
-                title = "down"
-                onPress={() => this.handleCountChange("down")} />
-              <Button
-                title="up"
-                onPress={() => this.handleCountChange("up")} />
-              <Button
-                title="distance ->"
-                onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})} />
+      <View style={sharedStyles.LAYOUT_MAIN_CONTAINER}>
+        <View style={{flex: 1}}>
+          <View style={styles.topContainer}>
+            <Text style={styles.lapCount}>{this.state.lapCount}</Text>
+          </View>
+          <View style={styles.middleContainer}>
+            <TouchableOpacity
+              onPress={() => this.handleCountChange("down")}
+              >
               <Image
-                source={IMAGES.NEXT_ARROW}
-                style={styles.nextArrow}/>
-            </View>
-          )
-        }
+                source={IMAGES.UP_ARROW}
+                style={[styles.upArrow, styles.downArrow]}/>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.handleCountChange("up")}
+            >
+              <Image
+                source={IMAGES.UP_ARROW}
+                style={styles.upArrow}/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bottomContainer}>
+            <NextButton
+              label={'distance'}
+              navigateNext={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})}/>
+          </View>
+        </View>
       </View>
     )
   }
 }
 
-
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
+  topContainer: {
+	  flex: 0.75,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   lapCount: {
-	  color: sharedStyles.COLOR_PURPLE,
+	  color: sharedStyles.COLOR_GREEN,
     fontSize: 250,
     fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
   },
-  nextArrow: {
-	  width: 40,
-    height: 40 / IMAGES.NEXT_ARROW_ASPECT,
+  middleContainer: {
+	  flex: 0.15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  upArrow: {
+    width: 50,
+    height: 50 / IMAGES.UP_ARROW_ASPECT,
+    marginHorizontal: 30,
+  },
+  downArrow: {
+    transform: [{rotate: '180deg'}],
+  },
+  bottomContainer: {
+	  flex: 0.1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   }
 });

@@ -13,6 +13,17 @@ export default sharedStyles = {
 
   // MEASUREMENTS
 
+  // LAYOUT
+  LAYOUT_MAIN_CONTAINER: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    paddingBottom: 25,
+    paddingTop: 20,
+  },
+
 
   // COLORS
   COLOR_GREEN: "#BADA55",
