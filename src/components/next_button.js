@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import IMAGES from '@assets/images'
 import sharedStyles from '../styles/shared_styles';
@@ -9,16 +9,26 @@ export default class NextButton extends Component {
   render() {
 
     return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => this.props.navigateNext()}
-        >
-        <Text style={styles.label}>{this.props.label}</Text>
-        <Image
-          source={IMAGES.NEXT_ARROW}
-          style={styles.nextArrow}
-          />
-      </TouchableOpacity>
+      <View>
+        {!this.props.disabled ?
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => this.props.onPress()}>
+            <Text style={styles.label}>{this.props.label}</Text>
+            <Image
+              source={IMAGES.NEXT_ARROW}
+              style={styles.nextArrow}
+            />
+          </TouchableOpacity>
+          :
+          <View style={styles.container}>
+            <Text style={[styles.label, styles.disabledLabel]}>{this.props.label}</Text>
+            <Image
+              source={IMAGES.NEXT_ARROW}
+              style={[styles.nextArrow, {tintColor: sharedStyles.COLOR_LIGHT_GRAY}]}/>
+          </View>
+        }
+      </View>
     )
   }
 }
@@ -34,6 +44,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: sharedStyles.COLOR_PURPLE,
     paddingBottom: 5,
+  },
+  disabledLabel: {
+    color: sharedStyles.COLOR_LIGHT_GRAY,
   },
   nextArrow: {
     width: 40,

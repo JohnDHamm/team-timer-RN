@@ -63,7 +63,8 @@ export default class LapCount extends Component {
           <View style={styles.bottomContainer}>
             <NextButton
               label={'distance'}
-              navigateNext={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})}/>
+              disabled={false}
+              onPress={() => this.props.navigation.navigate(`LapDistance`, {lapCount: this.state.lapCount})}/>
           </View>
         </View>
       </View>

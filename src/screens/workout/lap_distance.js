@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Button } from 'react-native';
+import { View, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import NextButton from '../../components/next_button';
+
+import sharedStyles from '../../styles/shared_styles';
 
 export default class LapDistance extends Component {
 
@@ -32,19 +34,24 @@ export default class LapDistance extends Component {
     // console.log("lapCount", lapCount);
 
     return(
-      <View style={styles.container}>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(lapDistance) => this.onInputChange(lapDistance)}
-          keyboardType='decimal-pad'
-          maxLength={4}
-          autoFocus={true}
-        />
-        <Button
-          title="select measurement units ->"
+      <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
+        <View style={{flex: 0.5}}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(lapDistance) => this.onInputChange(lapDistance)}
+            keyboardType='decimal-pad'
+            selectionColor={sharedStyles.COLOR_PURPLE}
+            maxLength={4}
+            autoFocus={true}
+          />
+        </View>
+        <NextButton
+          label={'units'}
           disabled={this.state.disableNextButton}
-          onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })} />
-      </View>
+          onPress={() => this.props.navigation.navigate(`LapMetric`, { lapCount: lapCount, lapDistance: this.state.lapDistance })}/>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -55,12 +62,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+  inputContainer: {
+    borderColor: sharedStyles.COLOR_PURPLE,
+    borderWidth: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+  },
   textInput: {
 	  width: 200,
 	  height: 100,
-    borderColor: 'purple',
-    borderWidth: 1,
-    fontSize: 80,
-    color: 'purple'
+    fontSize: 100,
+    color: sharedStyles.COLOR_GREEN,
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
   }
 });
