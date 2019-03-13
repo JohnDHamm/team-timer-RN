@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 
-import TimeConversion from '../../utility/time_conversion';
 import _ from 'lodash';
+import Utils from '../../utility/utils'
 
 import Separator from '../../components/separator';
 import SecondaryButton from '../../components/secondary_button';
+
 import sharedStyles from '../../styles/shared_styles';
 
 const resultsWidth = sharedStyles.DEVICE_WIDTH * 0.5;
@@ -32,27 +33,40 @@ export default class WorkoutDetail extends Component {
 
   renderLaps(lapsArray) {
     return _.map(lapsArray, (lapTime, index) => {
+      const displayTime = Utils.createDisplayTime(lapTime)
+
       return (
         <View key={lapTime} style={styles.lapRow}>
           <Text style={styles.lapNum}>lap {index + 1}:</Text>
-          <Text style={styles.lapTime}>{TimeConversion(lapTime)}</Text>
+          <View style={styles.timeBox}>
+            <Text style={styles.lapTime}>{displayTime.main}.</Text>
+            <Text style={styles.lapTimeDecimal}>{displayTime.decimal}</Text>
+          </View>
         </View>
       )
     })
   }
 
   renderSummary(lapsArray) {
-    const totalTime = lapsArray.reduce((a, b) => a + b);
-    const lapAverage = Math.floor(totalTime / lapsArray.length);
+    const totalTimeMS = lapsArray.reduce((a, b) => a + b),
+      totalTime = Utils.createDisplayTime(totalTimeMS),
+      lapAvg = Utils.createDisplayTime(Math.floor(totalTimeMS / lapsArray.length))
+
     return (
       <View>
         <View style={styles.lapRow}>
           <Text style={styles.lapNum}>total:</Text>
-          <Text style={styles.totalTime}>{TimeConversion(totalTime)}</Text>
+          <View style={styles.timeBox}>
+            <Text style={styles.totalTime}>{totalTime.main}.</Text>
+            <Text style={styles.totalTimeDecimal}>{totalTime.decimal}</Text>
+          </View>
         </View>
         <View style={styles.lapRow}>
           <Text style={styles.lapNum}>avg:</Text>
-          <Text style={styles.lapTime}>{TimeConversion(lapAverage)}</Text>
+          <View style={styles.timeBox}>
+            <Text style={styles.lapTime}>{lapAvg.main}.</Text>
+            <Text style={styles.lapTimeDecimal}>{lapAvg.decimal}</Text>
+          </View>
         </View>
       </View>
     )
@@ -130,26 +144,43 @@ const styles = StyleSheet.create({
   },
   lapsBlock: {
 	  width: resultsWidth,
+    paddingBottom: 5,
   },
   lapRow: {
 	  flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   lapNum: {
     fontFamily: sharedStyles.FONT_PRIMARY_LIGHT,
-    fontSize: 30,
+    fontSize: 25,
     color: sharedStyles.COLOR_DARK_BLUE
   },
+  timeBox: {
+	  flexDirection: 'row',
+    alignItems: 'flex-end'
+	},
   lapTime: {
 	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
 	  fontSize: 30,
     color: sharedStyles.COLOR_PURPLE
   },
+  lapTimeDecimal: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 23,
+    color: sharedStyles.COLOR_PURPLE,
+    paddingBottom: 2,
+  },
   totalTime: {
     fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
     fontSize: 30,
     color: sharedStyles.COLOR_DARK_BLUE
+  },
+  totalTimeDecimal: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 23,
+    color: sharedStyles.COLOR_DARK_BLUE,
+    paddingBottom: 2,
   },
   avgTime: {
     fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
