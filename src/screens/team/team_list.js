@@ -7,7 +7,8 @@ import _ from 'lodash';
 import Utils from '../../utility/utils';
 import StoreUtils from '../../utility/store_utils';
 import sharedStyles from '../../styles/shared_styles';
-import SecondaryButton from '../../components/secondary_button'
+import SecondaryButton from '../../components/secondary_button';
+import EmptyTeam from '../../components/empty_team';
 
 export default class TeamList extends Component {
 
@@ -82,12 +83,13 @@ export default class TeamList extends Component {
     return(
       <View style={sharedStyles.LAYOUT_MAIN_CENTER}>
         <View style={styles.listContainer}>
-          <ScrollView contentContainerStyle={styles.contentContainer}>
-            { this.state.showEmptyMessage &&
-              <Text>no current athletes</Text>
-            }
-            {this.renderTeamList()}
-          </ScrollView>
+          { this.state.showEmptyMessage ?
+            <EmptyTeam />
+          :
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+              {this.renderTeamList()}
+            </ScrollView>
+          }
         </View>
         <View style={styles.addBtnContainer}>
           <TouchableOpacity

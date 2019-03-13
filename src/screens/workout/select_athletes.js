@@ -8,7 +8,8 @@ import Utils from '../../utility/utils'
 import StoreUtils from '../../utility/store_utils'
 
 import sharedStyles from '../../styles/shared_styles';
-import NextButton from '../../components/next_button'
+import NextButton from '../../components/next_button';
+import EmptyTeam from '../../components/empty_team';
 
 export default class SelectAthletes extends Component {
 
@@ -89,26 +90,25 @@ export default class SelectAthletes extends Component {
         <NavigationEvents
           onWillFocus={() => this.getAthletes()}
         />
-        {this.state.showEmptyMessage &&
-          <Text style={styles.emptyTeam}>{sharedStyles.EMPTY_TEAM_MESSAGE}</Text>
-        }
-        {!this.state.showEmptyMessage &&
-          <View style={{flex: 1}}>
-            <ScrollView style={{flex: 0.9}}>
-              {this.renderTeamList()}
-            </ScrollView>
-            <View style={[{flex: 0.1}, sharedStyles.LAYOUT_NEXT_BUTTON_CONTAINER]}>
-              <NextButton
-                label={'confirm workout'}
-                disabled={this.state.disableNextButton}
-                onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
-                  lapCount,
-                  lapDistance,
-                  lapMetric,
-                  selectedAthletes: this.state.selectedAthletes
-                })}/>
+        {this.state.showEmptyMessage ?
+            <EmptyTeam />
+          :
+            <View style={{flex: 1}}>
+              <ScrollView style={{flex: 0.9}}>
+                {this.renderTeamList()}
+              </ScrollView>
+              <View style={[{flex: 0.1}, sharedStyles.LAYOUT_NEXT_BUTTON_CONTAINER]}>
+                <NextButton
+                  label={'confirm workout'}
+                  disabled={this.state.disableNextButton}
+                  onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
+                    lapCount,
+                    lapDistance,
+                    lapMetric,
+                    selectedAthletes: this.state.selectedAthletes
+                  })}/>
+              </View>
             </View>
-          </View>
         }
       </View>
     )
