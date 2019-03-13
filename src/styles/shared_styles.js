@@ -12,6 +12,7 @@ export default sharedStyles = {
   DEVICE_HEIGHT: y,
 
   // MEASUREMENTS
+  DEFAULT_BORDER_RADIUS: 5,
 
 
   // LAYOUT

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 	},
   title: {
     fontWeight: "200",
-    color: sharedStyles.COLOR_GREEN,
+    color: sharedStyles.COLOR_PURPLE,
     fontSize: 40,
   }
 });
