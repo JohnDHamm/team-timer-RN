@@ -82,12 +82,12 @@ export default class TeamList extends Component {
     return(
       <View style={sharedStyles.LAYOUT_MAIN_CENTER}>
         <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
-          { this.state.showEmptyMessage &&
-            <Text>no current athletes</Text>
-          }
-          {this.renderTeamList()}
-        </ScrollView>
+          <ScrollView contentContainerStyle={styles.contentContainer}>
+            { this.state.showEmptyMessage &&
+              <Text>no current athletes</Text>
+            }
+            {this.renderTeamList()}
+          </ScrollView>
         </View>
         <View style={styles.addBtnContainer}>
           <TouchableOpacity

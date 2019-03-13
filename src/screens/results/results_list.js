@@ -60,7 +60,7 @@ export default class ResultsList extends Component {
   }
 
   selectWorkout(workout) {
-    this.props.navigation.navigate(`WorkoutDetail`, { selectedWorkout: workout });
+    this.props.navigation.navigate(`WorkoutDetail`, { headerTitle: workout.description,  selectedWorkout: workout });
   }
 
   // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING
