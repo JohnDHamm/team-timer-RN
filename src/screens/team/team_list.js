@@ -13,7 +13,7 @@ export default class TeamList extends Component {
 
   static navigationOptions = {
     title: 'Team',
-    headerBackTitle: 'Team',
+    headerBackTitle: 'Cancel',
   }
 
   constructor(props) {
