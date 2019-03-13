@@ -4,13 +4,18 @@ import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import TimeConversion from '../../utility/time_conversion';
 import _ from 'lodash';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import Separator from '../../components/separator';
+import SecondaryButton from '../../components/secondary_button';
+import sharedStyles from '../../styles/shared_styles';
+
+const resultsWidth = sharedStyles.DEVICE_WIDTH * 0.5;
 
 export default class WorkoutDetail extends Component {
 
-  static navigationOptions = {
-    title: 'Workout detail',
-    // headerBackTitle: 'Workout',
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: navigation.getParam('headerTitle', 'Result detail')
+    }
   }
 
   constructor(props) {
@@ -26,9 +31,12 @@ export default class WorkoutDetail extends Component {
   }
 
   renderLaps(lapsArray) {
-    return _.map(lapsArray, lap => {
+    return _.map(lapsArray, (lapTime, index) => {
       return (
-        <Text key={lap} style={styles.lap}>{TimeConversion(lap)}</Text>
+        <View key={lapTime} style={styles.lapRow}>
+          <Text style={styles.lapNum}>lap {index + 1}:</Text>
+          <Text style={styles.lapTime}>{TimeConversion(lapTime)}</Text>
+        </View>
       )
     })
   }
@@ -38,8 +46,14 @@ export default class WorkoutDetail extends Component {
     const lapAverage = Math.floor(totalTime / lapsArray.length);
     return (
       <View>
-        <Text style={styles.totalTime}>{TimeConversion(totalTime)}</Text>
-        <Text style={styles.lapAvg}>{TimeConversion(lapAverage)}</Text>
+        <View style={styles.lapRow}>
+          <Text style={styles.lapNum}>total:</Text>
+          <Text style={styles.totalTime}>{TimeConversion(totalTime)}</Text>
+        </View>
+        <View style={styles.lapRow}>
+          <Text style={styles.lapNum}>avg:</Text>
+          <Text style={styles.lapTime}>{TimeConversion(lapAverage)}</Text>
+        </View>
       </View>
     )
   }
@@ -51,9 +65,20 @@ export default class WorkoutDetail extends Component {
       // console.log("athlete", athlete.athlete)
       return (
         <View key={athlete.athlete}>
-          <Text style={styles.athleteName}>{athlete.athlete}</Text>
-          { this.renderLaps(athlete.laps) }
-          { this.renderSummary(athlete.laps) }
+          <View style={styles.nameBlock}>
+            <Text style={styles.athleteName}>{athlete.athlete}</Text>
+          </View>
+          <View style={styles.resultsBlock}>
+            <View style={styles.lapsBlock}>
+              { this.renderLaps(athlete.laps) }
+            </View>
+            <Separator
+              width={resultsWidth}
+              color={sharedStyles.COLOR_GREEN}/>
+            <View style={styles.lapsBlock}>
+              { this.renderSummary(athlete.laps) }
+            </View>
+          </View>
         </View>
       )
     })
@@ -62,9 +87,14 @@ export default class WorkoutDetail extends Component {
   render(){
     return(
       <View style={styles.container}>
-        <Text style={styles.description}>{this.state.selectedWorkout.description}</Text>
         <ScrollView>
           { this.renderAthletes() }
+          {/*<View style={styles.deleteBtn}>
+            <SecondaryButton
+              label={'delete result'}
+              color={sharedStyles.COLOR_PURPLE}
+            />
+          </View>*/}
         </ScrollView>
       </View>
     )
@@ -75,26 +105,61 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
+    alignSelf: 'stretch'
 	},
   description: {
 	  color: 'purple',
     fontSize: 20,
     padding: 10
   },
-  athleteName: {
-	  fontSize: 40
+  nameBlock: {
+	  backgroundColor: sharedStyles.COLOR_GREEN,
+    paddingBottom: 5,
   },
-  lap: {
-	  fontSize: 20
+  resultsBlock: {
+	  justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  athleteName: {
+    textAlign: 'center',
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+	  fontSize: 40,
+    color: sharedStyles.COLOR_PURPLE
+  },
+  lapsBlock: {
+	  width: resultsWidth,
+  },
+  lapRow: {
+	  flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  lapNum: {
+    fontFamily: sharedStyles.FONT_PRIMARY_LIGHT,
+    fontSize: 30,
+    color: sharedStyles.COLOR_DARK_BLUE
+  },
+  lapTime: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+	  fontSize: 30,
+    color: sharedStyles.COLOR_PURPLE
   },
   totalTime: {
-	  fontWeight: 'bold',
-    fontSize: 20,
-    color: 'purple',
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 30,
+    color: sharedStyles.COLOR_DARK_BLUE
   },
-  lapAvg: {
-	  color: 'gray'
-  }
+  avgTime: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 30,
+    color: sharedStyles.COLOR_GREEN
+  },
+  // deleteBtn: {
+	//   justifyContent: 'center',
+  //   alignItems: 'center',
+	//   paddingVertical: 20
+  // }
 
 });

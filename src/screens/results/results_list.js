@@ -7,13 +7,13 @@ import _ from 'lodash';
 
 import StoreUtils from '../../utility/store_utils';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
 
 export default class ResultsList extends Component {
 
   static navigationOptions = {
-    title: 'Saved Workouts',
-    headerBackTitle: 'Workouts',
+    title: 'Results',
+    headerBackTitle: 'Results',
   }
 
   constructor(props) {
@@ -49,17 +49,18 @@ export default class ResultsList extends Component {
     return _.map(this.state.workouts, workout => {
       return (
         <TouchableOpacity
+          style={styles.workoutBtn}
           key={workout.id}
           onPress={() => this.selectWorkout(workout)}
         >
-          <Text style={styles.workout}>{workout.description}</Text>
+          <Text style={styles.workoutLabel}>{workout.description}</Text>
         </TouchableOpacity>
       )
     })
   }
 
   selectWorkout(workout) {
-    this.props.navigation.navigate(`WorkoutDetail`, { selectedWorkout: workout });
+    this.props.navigation.navigate(`WorkoutDetail`, { headerTitle: workout.description,  selectedWorkout: workout });
   }
 
   // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING
@@ -75,19 +76,21 @@ export default class ResultsList extends Component {
 
   render(){
     return(
-      <View style={styles.container}>
+      <View style={[sharedStyles.LAYOUT_MAIN_STRETCH]}>
         <NavigationEvents
           onWillFocus={() => this.getResults()}
         />
+
         { this.state.showEmptyMessage &&
         <Text>no current workouts</Text>
         }
+
         <ScrollView>
           {this.renderWorkouts()}
         </ScrollView>
-        <Button
+        {/*<Button
           title="DELETE ALL"
-          onPress={() => this.deleteAllWorkouts()}/>
+          onPress={() => this.deleteAllWorkouts()}/>*/}
       </View>
     )
   }
@@ -99,9 +102,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-  workout: {
-	  color: 'purple',
-    fontSize: 20,
-    padding: 10
+  workoutBtn: {
+    marginBottom: 20,
+    paddingLeft: 10
+  },
+  workoutLabel: {
+	  color: sharedStyles.COLOR_PURPLE,
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 35,
   }
 });
