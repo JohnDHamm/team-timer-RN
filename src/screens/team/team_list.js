@@ -6,14 +6,14 @@ import _ from 'lodash';
 
 import Utils from '../../utility/utils';
 import StoreUtils from '../../utility/store_utils';
-
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
+import SecondaryButton from '../../components/secondary_button'
 
 export default class TeamList extends Component {
 
   static navigationOptions = {
     title: 'Team',
-    headerBackTitle: 'Team',
+    headerBackTitle: 'Cancel',
   }
 
   constructor(props) {
@@ -71,7 +71,7 @@ export default class TeamList extends Component {
       StoreUtils.removeStore('TeamStore')
         .then(() => {
           // console.log("removed all athletes");
-          this.setState({teamList: [], showEmptyMessage: true})
+          this.setState({teamList: [], teamStore: {}, showEmptyMessage: true})
         })
     }
   }
@@ -80,30 +80,46 @@ export default class TeamList extends Component {
   render(){
 
     return(
-      <View style={styles.container}>
-        <ScrollView>
+      <View style={sharedStyles.LAYOUT_MAIN_CENTER}>
+        <View style={styles.listContainer}>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
           { this.state.showEmptyMessage &&
-          <Text>no current athletes</Text>
+            <Text>no current athletes</Text>
           }
           {this.renderTeamList()}
         </ScrollView>
-        <Button title="DELETE ALL" onPress={() => this.deleteAllAthletes()}/>
-        <Button
-          title="ADD NEW ATHLETE"
-          onPress={() => this.props.navigation.navigate(`AthleteEntry`, { teamStore: this.state.teamStore})} />
+        </View>
+        <View style={styles.addBtnContainer}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate(`AthleteEntry`, { teamStore: this.state.teamStore})}>
+            <SecondaryButton
+              label={'add an athlete'}
+              color={sharedStyles.COLOR_PURPLE}/>
+          </TouchableOpacity>
+        </View>
+        {/*<Button title="DELETE ALL" onPress={() => this.deleteAllAthletes()}/>*/}
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
+	listContainer: {
+		flex: 0.85,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+  addBtnContainer: {
+	  flex: 0.15,
+		justifyContent: 'center',
+		alignItems: 'center',
+  },
+  contentContainer: {
+	  paddingBottom: 20,
+  },
   athleteName: {
-    color: 'purple',
+	  fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
+    color: sharedStyles.COLOR_PURPLE,
     fontSize: 40
   }
 });
