@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView
-} from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, Image} from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 
 import _ from 'lodash';
 
 import StoreUtils from '../../utility/store_utils';
 
+import IMAGES from '@assets/images';
 import sharedStyles from '../../styles/shared_styles';
 
 export default class ResultsList extends Component {
@@ -81,13 +81,19 @@ export default class ResultsList extends Component {
           onWillFocus={() => this.getResults()}
         />
 
-        { this.state.showEmptyMessage &&
-        <Text>no current workouts</Text>
+        { this.state.showEmptyMessage ?
+            <View style={styles.emptyContainer}>
+              <Image
+                style={styles.emptyStopwatch}
+                source={IMAGES.STOPWATCH_MED}
+                />
+              <Text style={styles.emptyResults}>You do not have any saved results!</Text>
+            </View>
+          :
+            <ScrollView>
+              {this.renderWorkouts()}
+            </ScrollView>
         }
-
-        <ScrollView>
-          {this.renderWorkouts()}
-        </ScrollView>
         {/*<Button
           title="DELETE ALL"
           onPress={() => this.deleteAllWorkouts()}/>*/}
@@ -97,11 +103,21 @@ export default class ResultsList extends Component {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
+	emptyContainer: {
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+  emptyStopwatch: {
+	  width: 80,
+    height: 80 / IMAGES.STOPWATCH_ASPECT,
+    tintColor: sharedStyles.COLOR_RED,
+    marginBottom: 10
+  },
+  emptyResults: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_LIGHT,
+    fontSize: 25,
+    color: sharedStyles.COLOR_RED
+  },
   workoutBtn: {
     marginBottom: 20,
     paddingLeft: 10

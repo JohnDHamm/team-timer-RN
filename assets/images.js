@@ -6,6 +6,7 @@ export default IMAGES = {
   // IMAGES
     // SM - up to 50pt
     // MED - up to 150pt
+  EMPTY_TEAM_MED: require('./images/empty_team_med.png'),
   NEXT_ARROW: require('./images/next_arrows.png'),
   STOPWATCH_SM: require('./images/stopwatch_sm.png'),
   STOPWATCH_MED: require('./images/stopwatch_med.png'),
@@ -14,6 +15,7 @@ export default IMAGES = {
 
 
   // ASPECT RATIOS - width:height
+  EMPTY_TEAM_ASPECT: 1.0,
   NEXT_ARROW_ASPECT: 1.579,
   STOPWATCH_ASPECT: 0.802,
   UP_ARROW_ASPECT: 2.256,
