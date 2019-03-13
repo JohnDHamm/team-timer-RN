@@ -11,6 +11,35 @@ export default sharedStyles = {
   DEVICE_WIDTH: x,
   DEVICE_HEIGHT: y,
 
+  // MEASUREMENTS
+  DEFAULT_BORDER_RADIUS: 5,
+
+
+  // LAYOUT
+  LAYOUT_MAIN_STRETCH: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    paddingBottom: 25,
+    paddingTop: 20,
+  },
+  LAYOUT_MAIN_CENTER: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 25,
+    paddingTop: 20,
+  },
+  LAYOUT_NEXT_BUTTON_CONTAINER: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+
+
   // COLORS
   COLOR_GREEN: "#BADA55",
   COLOR_PURPLE: "#6E5EAB",
@@ -21,14 +50,21 @@ export default sharedStyles = {
   COLOR_WHITE: "#FFFFFF",
 
 
-
   // FONTS
-  FONT_PRIMARY_REGULAR: "Dosis Regular",
-  // FONT_PRIMARY_LIGHT: "",
-  // FONT_PRIMARY_MEDIUM: "",
+  FONT_PRIMARY_REGULAR: "dosis-regular",
+  FONT_PRIMARY_LIGHT: "dosis-light",
+  FONT_PRIMARY_MEDIUM: "dosis-medium",
+  FONT_PRIMARY_SEMIBOLD: "dosis-semiBold",
 
+  // MESSAGES
+  EMPTY_TEAM_MESSAGE: "There are no athletes currently entered for your team!",
 
-
+  // TEMP FOR TESTING LAYOUTS
+  TEMP_BORDER: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderStyle: 'dotted',
+  }
 
 
 

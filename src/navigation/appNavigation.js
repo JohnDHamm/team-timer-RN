@@ -6,7 +6,7 @@ import Routes from './routes';
 import Splash from '../screens/main/splash';
 import Timer from '../screens/main/timer';
 
-// import Images from '@assets/images'
+import IMAGES from '@assets/images'
 import sharedStyles from '../styles/shared_styles';
 
 const appHeaderOptions = {
@@ -15,11 +15,12 @@ const appHeaderOptions = {
   },
   headerTitleStyle: {
     color: sharedStyles.COLOR_GREEN,
-    // fontWeight: '800',
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 20,
   },
   headerBackTitleStyle: {
     color: sharedStyles.COLOR_LIGHT_BLUE,
-    fontSize: 14,
+    fontSize: 16,
   },
   headerTintColor: sharedStyles.COLOR_LIGHT_BLUE,
 }
@@ -59,7 +60,13 @@ const TabNavConfig = {
 const TabNav = createBottomTabNavigator({
   Workout: { screen: WorkoutStack,
     navigationOptions: {
-      tabBarLabel: 'Workout'
+      tabBarLabel: 'Workout',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={IMAGES.WORKOUT_TAB_ICON}
+          style={[styles.tabIcon, {tintColor: tintColor}]}
+        />
+      )
     }
   },
   Results: { screen: ResultsStack,
@@ -93,7 +100,7 @@ export default AppContainer;
 
 const styles = StyleSheet.create({
   tabIcon: {
-    width: 32,
-    height: 32,
+    width: 26,
+    height: 26,
   }
 });

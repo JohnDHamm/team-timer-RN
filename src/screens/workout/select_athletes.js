@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
 import {NavigationEvents} from 'react-navigation'
 
 import _ from 'lodash';
@@ -7,7 +7,8 @@ import _ from 'lodash';
 import Utils from '../../utility/utils'
 import StoreUtils from '../../utility/store_utils'
 
-// import sharedStyles from '../../styles/sharedStyles';
+import sharedStyles from '../../styles/shared_styles';
+import NextButton from '../../components/next_button'
 
 export default class SelectAthletes extends Component {
 
@@ -47,9 +48,14 @@ export default class SelectAthletes extends Component {
       const selected = this.checkSelected(athlete.name);
       return (
         <TouchableOpacity
+          style={styles.athleteSelect}
           key={athlete.name}
           onPress={() => this.toggleAthlete(athlete.name)}
         >
+          <View style={[
+            styles.radio,
+            selected ? styles.radioSelected : styles.radioUnselected]}
+          />
           <Text style={selected ? styles.athleteName : styles.athleteNameUnselected}>{athlete.name}</Text>
         </TouchableOpacity>
       );
@@ -79,27 +85,29 @@ export default class SelectAthletes extends Component {
     const { lapCount, lapDistance, lapMetric } = this.props.navigation.state.params;
 
     return(
-      <View style={styles.container}>
+      <View style={sharedStyles.LAYOUT_MAIN_STRETCH}>
         <NavigationEvents
           onWillFocus={() => this.getAthletes()}
         />
         {this.state.showEmptyMessage &&
-          <Text>no current athletes</Text>
+          <Text style={styles.emptyTeam}>{sharedStyles.EMPTY_TEAM_MESSAGE}</Text>
         }
         {!this.state.showEmptyMessage &&
-          <View>
-            <ScrollView>
+          <View style={{flex: 1}}>
+            <ScrollView style={{flex: 0.9}}>
               {this.renderTeamList()}
             </ScrollView>
-            <Button
-              title="confirm workout details ->"
-              disabled={this.state.disableNextButton}
-              onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
-                lapCount,
-                lapDistance,
-                lapMetric,
-                selectedAthletes: this.state.selectedAthletes
-              })}/>
+            <View style={[{flex: 0.1}, sharedStyles.LAYOUT_NEXT_BUTTON_CONTAINER]}>
+              <NextButton
+                label={'confirm workout'}
+                disabled={this.state.disableNextButton}
+                onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
+                  lapCount,
+                  lapDistance,
+                  lapMetric,
+                  selectedAthletes: this.state.selectedAthletes
+                })}/>
+            </View>
           </View>
         }
       </View>
@@ -114,16 +122,42 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
     marginTop: 30
 	},
+  athleteSelect: {
+	  marginLeft: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginVertical: 10
+  },
+  radio: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    marginRight: 10,
+  },
+  radioSelected: {
+    borderWidth: 6,
+    borderColor: sharedStyles.COLOR_GREEN,
+    backgroundColor: sharedStyles.COLOR_PURPLE
+  },
+  radioUnselected: {
+    borderWidth: 1,
+    borderColor: sharedStyles.COLOR_LIGHT_GRAY,
+  },
   athleteName: {
-    fontSize: 30,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: 'purple'
+    fontSize: 40,
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    color: sharedStyles.COLOR_GREEN
   },
   athleteNameUnselected: {
-	  fontSize: 30,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: 'gray'
+	  fontSize: 40,
+    fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
+    color: sharedStyles.COLOR_LIGHT_GRAY
+  },
+  emptyTeam: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_LIGHT,
+    color: sharedStyles.COLOR_RED,
+    fontSize: 20,
+    textAlign: 'center',
   }
 });

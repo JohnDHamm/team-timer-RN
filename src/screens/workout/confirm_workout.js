@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
 import _ from 'lodash';
 
-// import sharedStyles from '../../styles/sharedStyles';
+import IMAGES from '@assets/images'
+import sharedStyles from '../../styles/shared_styles';
+import Separator from '../../components/separator';
+import SecondaryButton from '../../components/secondary_button';
 
 export default class ConfirmWorkout extends Component {
 
@@ -16,7 +19,7 @@ export default class ConfirmWorkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startButtonLabel: "start workout"
+      startButtonLabel: "START WORKOUT"
     }
   };
 
@@ -56,19 +59,47 @@ export default class ConfirmWorkout extends Component {
     const { lapCount, lapDistance, lapMetric, selectedAthletes } = this.props.navigation.state.params;
 
     return(
-      <View style={styles.container}>
+      <View style={sharedStyles.LAYOUT_MAIN_CENTER}>
         <View style={styles.detailsContainer}>
-          <Text style={styles.details}>Laps: {lapCount} x {lapDistance}{lapMetric}</Text>
-          <Text style={styles.details}>{selectedAthletes.length} athletes selected</Text>
-          {this.renderAthletes(selectedAthletes)}
+          <View style={[styles.detailsRow, {marginBottom: 15}]}>
+            <Text style={styles.detailsLight}>Laps: </Text>
+            <Text style={styles.detailsBold}>{lapCount}</Text>
+            <Text style={styles.detailsLight}> x </Text>
+            <Text style={styles.detailsBold}>{lapDistance}{lapMetric}</Text>
+          </View>
+          <View style={styles.detailsRow}>
+            <Text style={styles.detailsBold}>{selectedAthletes.length}</Text>
+            <Text style={styles.detailsLight}> athletes:</Text>
+          </View>
+          <Separator
+            width={sharedStyles.DEVICE_WIDTH * 0.55}
+            color={sharedStyles.COLOR_GREEN}
+          />
+          <ScrollView contentContainerStyle={styles.contentContainer}>
+            {this.renderAthletes(selectedAthletes)}
+          </ScrollView>
         </View>
-        <View style={styles.startButton}>
-          <Button
-            title={this.state.startButtonLabel}
-            onPress={() => this.startWorkout()}/>
+
+        <View style={styles.startButtonContainer}>
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={() => this.startWorkout()}
+          >
+            <Image
+              source={IMAGES.STOPWATCH_SM}
+              style={styles.startBtnIcon}
+              />
+            <Text style={styles.startBtnLabel}>{this.state.startButtonLabel}</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.resetButton}>
-          <Button title={"reset workout"} onPress={() => this.resetWorkout()}/>
+
+        <View style={styles.resetButtonContainer}>
+          <TouchableOpacity
+            onPress={() => this.resetWorkout()}>
+            <SecondaryButton
+              label={'reset workout'}
+              color={sharedStyles.COLOR_PURPLE}/>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -76,27 +107,59 @@ export default class ConfirmWorkout extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   detailsContainer: {
-    flex: .6,
-    alignItems: 'center',
-    paddingTop: 20,
+    flex: .7,
   },
-  details: {
-    fontSize: 30
+  contentContainer: {
+    alignItems: 'center',
+    paddingBottom: 20
+  },
+  detailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  detailsLight: {
+    fontSize: 35,
+    fontFamily: sharedStyles.FONT_PRIMARY_LIGHT,
+    color: sharedStyles.COLOR_DARK_BLUE
+  },
+  detailsBold: {
+    fontSize: 40,
+    fontFamily: sharedStyles.FONT_PRIMARY_SEMIBOLD,
+    color: sharedStyles.COLOR_PURPLE
   },
   athleteName: {
-    fontSize: 20,
-    color: 'purple',
+    fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
+    fontSize: 30,
+    color: sharedStyles.COLOR_PURPLE,
+  },
+  startButtonContainer: {
+    flex: .2,
+    justifyContent: 'center'
   },
   startButton: {
-    flex: .2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: sharedStyles.COLOR_GREEN,
+    borderRadius: sharedStyles.DEFAULT_BORDER_RADIUS,
+    paddingHorizontal: 15,
+    paddingVertical: 10
   },
-  resetButton: {
-    flex: .2,
-  }
+  startBtnIcon: {
+    width: 35,
+    height: 35 / IMAGES.STOPWATCH_ASPECT,
+    marginRight: 10,
+    tintColor: sharedStyles.COLOR_PURPLE
+  },
+  startBtnLabel: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 25,
+    color: sharedStyles.COLOR_PURPLE
+  },
+  resetButtonContainer: {
+    flex: .1,
+    justifyContent: 'center'
+  },
 });
