@@ -4,7 +4,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 
 import _ from 'lodash';
 
-import IMAGES from '@assets/images'
+import IMAGES from '@assets/images';
 import sharedStyles from '../../styles/shared_styles';
 import Separator from '../../components/separator';
 import SecondaryButton from '../../components/secondary_button';
