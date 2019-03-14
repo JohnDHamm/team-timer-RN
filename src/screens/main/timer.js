@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image} from 'react-native'
+import PieChart from 'react-native-pie-chart';
 
 import StoreUtils from '../../utility/store_utils';
 import Utils from '../../utility/utils';
@@ -249,8 +250,18 @@ export default class Timer extends Component {
             </View>
           :
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20}}>
-              <View style={styles.lapCounter}>
-                <Text style={styles.lapsCompleted}>{this.state.lapsCompleted}</Text>
+              <View>
+                <PieChart
+                  chart_wh={74}
+                  series={[this.state.lapsCompleted, this.state.workoutData.lapCount - this.state.lapsCompleted]}
+                  sliceColor={[sharedStyles.COLOR_GREEN, sharedStyles.COLOR_PURPLE]}
+                  doughnut={true}
+                  coverRadius={0.9}
+                  coverFill={sharedStyles.COLOR_DARK_BLUE}
+                />
+                <View style={styles.lapNumBlock}>
+                  <Text style={styles.lapsCompleted}>{this.state.lapsCompleted}</Text>
+                </View>
               </View>
               <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.description}>{this.state.description}</Text>
@@ -325,6 +336,15 @@ const styles = StyleSheet.create({
     borderRadius: 37,
     borderWidth: 5,
     borderColor: sharedStyles.COLOR_PURPLE
+  },
+  lapNumBlock: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 74,
+    height: 74,
+    top: 0,
+    left: 0
   },
   lapsCompleted: {
 	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
