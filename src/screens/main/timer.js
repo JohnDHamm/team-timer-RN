@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView, Image} from 'react-native'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image} from 'react-native'
 
-import TimeConversion from '../../utility/time_conversion';
 import StoreUtils from '../../utility/store_utils';
+import Utils from '../../utility/utils';
 
 import _ from 'lodash';
 
@@ -16,12 +16,14 @@ export default class Timer extends Component {
     this.state = {
       workoutData: {},
       description: "",
-      timerOn: true,
+      timerOn: false,
       startTime: 0,
       time: 0,
       interval: null,
-      mainReadoutMain: "0:00",
-      mainReadoutDecimal: "0",
+      mainReadout: {
+        main: "0:00",
+        decimal: "0",
+      },
       lapsCompleted: 0,
       athletesArray: []
     }
@@ -52,8 +54,10 @@ export default class Timer extends Component {
       let athleteObj = {
         index: i,
         name: sortedAthletes[i],
-        readoutMain: "0:00",
-        readoutDecimal: "0",
+        readout: {
+          main: "0:00",
+          decimal: "0"
+        },
         currentLap: 0,
         lapTimesArray: [0],
         workoutDone: false,
@@ -82,7 +86,7 @@ export default class Timer extends Component {
     const now = Date.now();
     const time = now - this.state.startTime;
     this.setState({time});
-    const mainReadout = TimeConversion(time);
+    const mainReadout = Utils.createDisplayTime(time);
     this.setState({mainReadout});
 
     for (i = 0; i < this.state.athletesArray.length; i++) {
@@ -90,7 +94,7 @@ export default class Timer extends Component {
         const newLapTime = time - this.state.athletesArray[i].elapsed;
         this.setState(prevState => ({
           athletesArray: prevState.athletesArray.map(
-            obj => (obj.index === i ? Object.assign(obj, {readout: TimeConversion(newLapTime)}) : obj)
+            obj => (obj.index === i ? Object.assign(obj, {readout: Utils.createDisplayTime(newLapTime)}) : obj)
           )
         }));
       }
@@ -128,7 +132,7 @@ export default class Timer extends Component {
             )
           }), () => this.setState(prevState => ({
               athletesArray: prevState.athletesArray.map(
-                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: 'done'}) : obj)
+                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: {main: 'done', decimal: ''}}) : obj)
               )
             }))
           )
@@ -186,25 +190,31 @@ export default class Timer extends Component {
 
   renderAthleteButtons() {
     return _.map(this.state.athletesArray, athlete => {
-      return (
-        <TouchableOpacity
-          key={athlete.index}
-          style={styles.athleteButton}
-          onPress={() => this.recordLap(athlete.index)}
-        >
-          <Text style={styles.athleteName}>{athlete.name}</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 5}}>
-              <Text style={styles.lapLabel}>lap: </Text>
-              <Text style={styles.lapNum}>{athlete.currentLap}</Text>
+      if (!athlete.workoutDone) {
+        return (
+          <TouchableOpacity
+            key={athlete.index}
+            style={styles.athleteButton}
+            onPress={() => this.recordLap(athlete.index)}
+          >
+            <Text style={styles.athleteName}>{athlete.name}</Text>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 5}}>
+                <Text style={styles.lapLabel}>lap: </Text>
+                <Text style={styles.lapNum}>{athlete.currentLap + 1}</Text>
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                <Text style={styles.athleteReadoutMain}>{athlete.readout.main}.</Text>
+                <View style={{width: 35, alignItems: 'flex-start'}}>
+                  <Text style={styles.athleteReadoutDecimal}>{athlete.readout.decimal}</Text>
+                </View>
+              </View>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-              <Text style={styles.athleteReadoutMain}>{athlete.readoutMain}.</Text>
-              <Text style={styles.athleteReadoutDecimal}>{athlete.readoutDecimal}</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      )
+          </TouchableOpacity>
+        )
+      } else {
+        return null;
+      }
     })
   }
 
@@ -244,12 +254,11 @@ export default class Timer extends Component {
               </View>
               <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.description}>{this.state.description}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'flex-end', marginTop: -10}}>
-                  <Text style={styles.mainReadoutMain}>{this.state.mainReadoutMain}.</Text>
-                  <Text style={styles.mainReadoutDecimal}>{this.state.mainReadoutDecimal}</Text>
-                </View>
+                <Text style={styles.mainReadoutMain}>{this.state.mainReadout.main}</Text>
               </View>
-              <TouchableOpacity style={styles.stopBtn}>
+              <TouchableOpacity
+                style={styles.stopBtn}
+                onPress={() => this.cancelWorkout()}>
                 <Image
                   style={styles.stopBtn}
                   source={IMAGES.OUTLINE_CANCEL_SM}/>
@@ -278,13 +287,10 @@ const styles = StyleSheet.create({
   topContainer: {
     height: 100
   },
-
-
   backArrow: {
     width: 13,
     height: 13 / IMAGES.ARROW_BACK_IOS_ASPECT,
     tintColor: sharedStyles.COLOR_LIGHT_BLUE,
-    // paddingLeft: 10,
     marginRight: 6
   },
   cancelText: {
@@ -292,7 +298,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   startButton: {
-	  // flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -300,8 +305,6 @@ const styles = StyleSheet.create({
     borderRadius: sharedStyles.DEFAULT_BORDER_RADIUS,
     paddingHorizontal: 15,
     paddingVertical: 5,
-    // marginLeft: 30,
-    // marginRight: 20,
   },
   startBtnIcon: {
     width: 35,
@@ -314,19 +317,16 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: sharedStyles.COLOR_PURPLE
   },
-
-
   lapCounter: {
-	  width: 64,
-    height: 64,
+	  width: 74,
+    height: 74,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 32,
-    borderWidth: 3,
+    borderRadius: 37,
+    borderWidth: 5,
     borderColor: sharedStyles.COLOR_PURPLE
   },
   lapsCompleted: {
-	  // textAlign: 'center',
 	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
 	  fontSize: 40,
     color: sharedStyles.COLOR_GREEN
@@ -341,30 +341,19 @@ const styles = StyleSheet.create({
     color: sharedStyles.COLOR_GREEN,
 	  fontSize: 60,
   },
-  mainReadoutDecimal: {
-    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
-    color: sharedStyles.COLOR_GREEN,
-    fontSize: 45,
-    paddingBottom: 3
-  },
   stopBtn: {
 	  width: 40,
     height: 40,
 	  tintColor: sharedStyles.COLOR_RED
   },
-
-
   scrollView: {
-	  // backgroundColor: sharedStyles.COLOR_GREEN,
     paddingHorizontal: 20,
     paddingBottom: 20
   },
-
-
   athleteButton: {
 	  borderRadius: 5,
     backgroundColor: sharedStyles.COLOR_WHITE,
-    paddingHorizontal: 15,
+    paddingLeft: 15,
     marginVertical: 10,
   },
   athleteName: {
