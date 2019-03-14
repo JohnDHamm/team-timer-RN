@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image} from 'react-native'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image, ActionSheetIOS} from 'react-native'
 import PieChart from 'react-native-pie-chart';
 
 import StoreUtils from '../../utility/store_utils';
@@ -70,8 +70,37 @@ export default class Timer extends Component {
   }
 
   cancelWorkout() {
-    console.log("cancelling workout")
-    this.props.navigation.goBack()
+    if (this.state.lapsCompleted > 0) {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancel', 'Save workout', 'No, reset the timer'],
+          cancelButtonIndex: 0,
+          destructiveButtonIndex: 2,
+          title: "Stop the timer?",
+          message: "Would you like to save the completed laps?"
+        },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 1:
+              this.saveWorkout();
+              break;
+            case 2:
+              this.resetTimer();
+              break;
+            default:
+              console.log("cancel")
+          }
+        }
+      )
+    } else {
+      console.log("no laps recorded - reset timer")
+      this.resetTimer();
+    }
+  }
+
+  resetTimer() {
+    clearInterval(this.state.interval);
+    this.props.navigation.goBack();
   }
 
   startTimer() {
@@ -150,16 +179,12 @@ export default class Timer extends Component {
     const lowestLap = currentLaps.sort(( a, b ) => a - b )[0];
     this.setState({lapsCompleted: lowestLap});
     if (lowestLap === this.state.workoutData.lapCount) {
-      this.stop();
+      this.saveWorkout();
     }
   }
 
-  stop(){
-    clearInterval(this.state.interval);
-    this.saveWorkout();
-  }
-
   saveWorkout() {
+    clearInterval(this.state.interval);
     let workoutArray = [];
     this.state.athletesArray.forEach(athlete => {
       let newAthObj = {
