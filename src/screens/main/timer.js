@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image} from 'react-native'
 
-import TimeConversion from '../../utility/time_conversion';
 import StoreUtils from '../../utility/store_utils';
+import Utils from '../../utility/utils';
 
 import _ from 'lodash';
 
+import IMAGES from '@assets/images';
 import sharedStyles from '../../styles/shared_styles';
 
 export default class Timer extends Component {
@@ -19,7 +20,10 @@ export default class Timer extends Component {
       startTime: 0,
       time: 0,
       interval: null,
-      mainReadout: "0:00.0",
+      mainReadout: {
+        main: "0:00",
+        decimal: "0",
+      },
       lapsCompleted: 0,
       athletesArray: []
     }
@@ -50,7 +54,10 @@ export default class Timer extends Component {
       let athleteObj = {
         index: i,
         name: sortedAthletes[i],
-        readout: "0:00.0",
+        readout: {
+          main: "0:00",
+          decimal: "0"
+        },
         currentLap: 0,
         lapTimesArray: [0],
         workoutDone: false,
@@ -79,7 +86,7 @@ export default class Timer extends Component {
     const now = Date.now();
     const time = now - this.state.startTime;
     this.setState({time});
-    const mainReadout = TimeConversion(time);
+    const mainReadout = Utils.createDisplayTime(time);
     this.setState({mainReadout});
 
     for (i = 0; i < this.state.athletesArray.length; i++) {
@@ -87,7 +94,7 @@ export default class Timer extends Component {
         const newLapTime = time - this.state.athletesArray[i].elapsed;
         this.setState(prevState => ({
           athletesArray: prevState.athletesArray.map(
-            obj => (obj.index === i ? Object.assign(obj, {readout: TimeConversion(newLapTime)}) : obj)
+            obj => (obj.index === i ? Object.assign(obj, {readout: Utils.createDisplayTime(newLapTime)}) : obj)
           )
         }));
       }
@@ -125,7 +132,7 @@ export default class Timer extends Component {
             )
           }), () => this.setState(prevState => ({
               athletesArray: prevState.athletesArray.map(
-                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: 'done'}) : obj)
+                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: {main: 'done', decimal: ''}}) : obj)
               )
             }))
           )
@@ -183,35 +190,88 @@ export default class Timer extends Component {
 
   renderAthleteButtons() {
     return _.map(this.state.athletesArray, athlete => {
-      return (
-        <TouchableOpacity
-          key={athlete.index}
-          style={styles.athleteButton}
-          onPress={() => this.recordLap(athlete.index)}
-        >
-          <Text style={styles.athleteName}>{athlete.name}</Text>
-          <Text style={styles.athleteReadout}>{athlete.readout}</Text>
-          <Text style={styles.athleteLap}>{athlete.currentLap}</Text>
-        </TouchableOpacity>
-      )
+      if (!athlete.workoutDone) {
+        return (
+          <TouchableOpacity
+            key={athlete.index}
+            style={styles.athleteButton}
+            onPress={() => this.recordLap(athlete.index)}
+          >
+            <Text style={styles.athleteName}>{athlete.name}</Text>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 5}}>
+                <Text style={styles.lapLabel}>lap: </Text>
+                <Text style={styles.lapNum}>{athlete.currentLap + 1}</Text>
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                <Text style={styles.athleteReadoutMain}>{athlete.readout.main}.</Text>
+                <View style={{width: 35, alignItems: 'flex-start'}}>
+                  <Text style={styles.athleteReadoutDecimal}>{athlete.readout.decimal}</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )
+      } else {
+        return null;
+      }
     })
   }
 
   render(){
     return(
       <SafeAreaView style={styles.container}>
-        <Text>{this.state.description}</Text>
-        <Button
-          title="cancel"
-          onPress={() => this.cancelWorkout()} />
-        <Button
-          title="start"
-          onPress={() => this.startTimer()} />
-        <Text style={styles.mainReadout}>{this.state.mainReadout}</Text>
-        <Text style={styles.lapsCompleted}>{this.state.lapsCompleted}</Text>
-        <ScrollView>
-          {this.renderAthleteButtons()}
-        </ScrollView>
+        <View style={styles.topContainer}>
+          {!this.state.timerOn ?
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignSelf: 'stretch'}}>
+              <TouchableOpacity
+                style={{flexDirection: 'row', paddingLeft: 8, paddingTop: 10, marginRight: 30}}
+                onPress={() => this.cancelWorkout()}
+                >
+                <Image
+                  style={styles.backArrow}
+                  source={IMAGES.ARROW_BACK_IOS}
+                />
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <View style={{flex: 1, justifyContent: 'center', alignSelf: 'stretch', paddingRight: 20}}>
+                <TouchableOpacity
+                  style={styles.startButton}
+                  onPress={() => this.startTimer()}
+                >
+                  <Image
+                    source={IMAGES.STOPWATCH_SM}
+                    style={styles.startBtnIcon}
+                  />
+                  <Text style={styles.startBtnLabel}>START</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          :
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20}}>
+              <View style={styles.lapCounter}>
+                <Text style={styles.lapsCompleted}>{this.state.lapsCompleted}</Text>
+              </View>
+              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.description}>{this.state.description}</Text>
+                <Text style={styles.mainReadoutMain}>{this.state.mainReadout.main}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.stopBtn}
+                onPress={() => this.cancelWorkout()}>
+                <Image
+                  style={styles.stopBtn}
+                  source={IMAGES.OUTLINE_CANCEL_SM}/>
+              </TouchableOpacity>
+            </View>
+          }
+        </View>
+
+        <View style={{flex: 1, backgroundColor: sharedStyles.COLOR_GREEN}}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
+            {this.renderAthleteButtons()}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     )
   }
@@ -220,33 +280,108 @@ export default class Timer extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// justifyContent: 'center',
-		alignItems: 'center',
-    paddingTop: 20,
-    backgroundColor: sharedStyles.COLOR_GREEN,
+		justifyContent: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: sharedStyles.COLOR_DARK_BLUE,
 	},
-  mainReadout: {
-	  fontSize: 40,
-    fontWeight: '700',
+  topContainer: {
+    height: 100
+  },
+  backArrow: {
+    width: 13,
+    height: 13 / IMAGES.ARROW_BACK_IOS_ASPECT,
+    tintColor: sharedStyles.COLOR_LIGHT_BLUE,
+    marginRight: 6
+  },
+  cancelText: {
+	  color: sharedStyles.COLOR_LIGHT_BLUE,
+    fontSize: 16,
+  },
+  startButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: sharedStyles.COLOR_GREEN,
+    borderRadius: sharedStyles.DEFAULT_BORDER_RADIUS,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+  },
+  startBtnIcon: {
+    width: 35,
+    height: 35 / IMAGES.STOPWATCH_ASPECT,
+    marginRight: 10,
+    tintColor: sharedStyles.COLOR_PURPLE
+  },
+  startBtnLabel: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 40,
+    color: sharedStyles.COLOR_PURPLE
+  },
+  lapCounter: {
+	  width: 74,
+    height: 74,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 37,
+    borderWidth: 5,
+    borderColor: sharedStyles.COLOR_PURPLE
   },
   lapsCompleted: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+	  fontSize: 40,
+    color: sharedStyles.COLOR_GREEN
+  },
+  description: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
+	  fontSize: 20,
+    color: sharedStyles.COLOR_GREEN
+  },
+  mainReadoutMain: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    color: sharedStyles.COLOR_GREEN,
 	  fontSize: 60,
-    color: 'purple'
+  },
+  stopBtn: {
+	  width: 40,
+    height: 40,
+	  tintColor: sharedStyles.COLOR_RED
+  },
+  scrollView: {
+    paddingHorizontal: 20,
+    paddingBottom: 20
   },
   athleteButton: {
-	  borderWidth: 2,
-    borderColor: 'gray'
+	  borderRadius: 5,
+    backgroundColor: sharedStyles.COLOR_WHITE,
+    paddingLeft: 15,
+    marginVertical: 10,
   },
   athleteName: {
-    fontSize: 25,
-    color: 'purple',
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 35,
+    color: sharedStyles.COLOR_DARK_BLUE,
   },
-  athleteReadout: {
+  athleteReadoutMain: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
     fontSize: 45,
-    // color: 'purple',
+    color: sharedStyles.COLOR_PURPLE
   },
-  athleteLap: {
-	  fontSize: 35,
-    color: 'gray',
+  athleteReadoutDecimal: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+    fontSize: 35,
+    color: sharedStyles.COLOR_PURPLE,
+    paddingBottom: 3
   },
+  lapLabel: {
+	  fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
+	  fontSize: 30,
+    color: sharedStyles.COLOR_DARK_BLUE
+  },
+  lapNum: {
+    fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
+	  fontSize: 30,
+    color: sharedStyles.COLOR_PURPLE
+  }
+
+
 });

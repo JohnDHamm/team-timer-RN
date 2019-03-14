@@ -4,7 +4,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 
 import _ from 'lodash';
 
-import IMAGES from '@assets/images'
+import IMAGES from '@assets/images';
 import sharedStyles from '../../styles/shared_styles';
 import Separator from '../../components/separator';
 import SecondaryButton from '../../components/secondary_button';
@@ -89,7 +89,7 @@ export default class ConfirmWorkout extends Component {
               source={IMAGES.STOPWATCH_SM}
               style={styles.startBtnIcon}
               />
-            <Text style={styles.startBtnLabel}>{this.state.startButtonLabel}</Text>
+            <Text style={styles.startBtnLabel}>LET'S DO IT!</Text>
           </TouchableOpacity>
         </View>
 
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: sharedStyles.COLOR_GREEN,
     borderRadius: sharedStyles.DEFAULT_BORDER_RADIUS,
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
     paddingVertical: 10
   },
   startBtnIcon: {
