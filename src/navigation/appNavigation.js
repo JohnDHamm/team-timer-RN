@@ -64,7 +64,7 @@ const TabNav = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Image
           source={IMAGES.WORKOUT_TAB_ICON}
-          style={[styles.tabIcon, {tintColor: tintColor}]}
+          style={[styles.workoutTabIcon, {tintColor: tintColor}]}
         />
       )
     }
@@ -72,18 +72,31 @@ const TabNav = createBottomTabNavigator({
   Results: { screen: ResultsStack,
     navigationOptions: {
       tabBarLabel: 'Results',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={IMAGES.RESULTS_TAB_ICON}
+          style={[styles.resultsTabIcon, {tintColor: tintColor}]}
+        />
+      )
     }
   },
   Team: { screen: TeamStack,
     navigationOptions: {
-      tabBarLabel: 'Team'
+      tabBarLabel: 'Team',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={IMAGES.TEAM_TAB_ICON}
+          style={[styles.teamTabIcon, {tintColor: tintColor}]}
+        />
+      )
     }
   }
 }, TabNavConfig );
 
 
 const MainStackConfig = {
-  headerMode: 'none'
+  headerMode: 'none',
+  mode: 'modal'
 }
 
 const MainStack = createStackNavigator({
@@ -94,13 +107,20 @@ const MainStack = createStackNavigator({
 )
 
 const AppContainer = createAppContainer(MainStack);
-
 export default AppContainer;
 
 
 const styles = StyleSheet.create({
-  tabIcon: {
-    width: 26,
+  workoutTabIcon: {
+    width: 21,
     height: 26,
+  },
+  resultsTabIcon: {
+    width: 31,
+    height: 24,
+  },
+  teamTabIcon: {
+    width: 32,
+    height: 24,
   }
 });
