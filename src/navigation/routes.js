@@ -1,5 +1,6 @@
 import TeamList from '../screens/team/team_list';
 import AthleteEntry from '../screens/team/athlete_entry';
+import EditAthlete from '../screens/team/edit_athlete';
 import LapCount from '../screens/workout/lap_count';
 import LapDistance from '../screens/workout/lap_distance';
 import LapMetric from '../screens/workout/lap_metric';
@@ -23,6 +24,7 @@ export default Routes = {
   },
   TeamRoutes: {
     TeamList: { screen: TeamList },
-    AthleteEntry: { screen: AthleteEntry }
+    AthleteEntry: { screen: AthleteEntry },
+    EditAthlete: { screen: EditAthlete },
   }
 }

@@ -38,28 +38,14 @@ export default class TeamList extends Component {
       });
   }
 
-  deleteAthlete(name) {
-    // console.log("selected ", name, " to delete");
-    // console.log("this.state.teamStore", this.state.teamStore)
-    let updatedTeamStore = this.state.teamStore;
-    delete updatedTeamStore[name];
-    // console.log("updatedTeamStore", updatedTeamStore);
-    StoreUtils.setStore('TeamStore', updatedTeamStore)
-      .then(() => {
-        const resetAction = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'TeamList' })],
-        });
-        this.props.navigation.dispatch(resetAction);
-      })
-  }
-
   renderTeamList() {
     return _.map(this.state.teamList, athlete => {
       return (
         <TouchableOpacity
           key={athlete.name}
-          onLongPress={() => this.deleteAthlete(athlete.name)}>
+          style={styles.athleteBtn}
+          onPress={() => this.props.navigation.navigate('EditAthlete', {teamStore: this.state.teamStore, currentName: athlete.name})}
+          >
           <Text style={styles.athleteName}>{athlete.name}</Text>
         </TouchableOpacity>
       );
@@ -118,6 +104,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
 	  paddingBottom: 20,
+  },
+  athleteBtn: {
+	  paddingHorizontal: 20,
+	  marginBottom: 10,
   },
   athleteName: {
 	  fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
