@@ -19,6 +19,7 @@ export default class ResultsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      workoutStore: {},
       workouts: [],
       showEmptyMessage: true
     }
@@ -32,6 +33,8 @@ export default class ResultsList extends Component {
     StoreUtils.getStore('WorkoutStore')
       .then(res => {
         if (res !== null) {
+          // console.log("WorkoutStore", res);
+          this.setState({workoutStore: res});
           this.sortList(res);
         }
       })
@@ -40,9 +43,13 @@ export default class ResultsList extends Component {
   sortList(workouts) {
     const sortedList = _.sortBy(workouts, ['id']).reverse();
     // console.log("sortedList", sortedList);
-    this.setState({workouts: sortedList}, () => {
-      this.setState({showEmptyMessage: false});
-    })
+    if (sortedList.length) {
+      this.setState({workouts: sortedList}, () => {
+        this.setState({showEmptyMessage: false});
+      })
+    } else {
+      this.setState({showEmptyMessage: true});
+    }
   }
 
   renderWorkouts() {
@@ -60,7 +67,7 @@ export default class ResultsList extends Component {
   }
 
   selectWorkout(workout) {
-    this.props.navigation.navigate(`WorkoutDetail`, { headerTitle: workout.description,  selectedWorkout: workout });
+    this.props.navigation.navigate(`WorkoutDetail`, { headerTitle: workout.description,  selectedWorkout: workout, workoutStore: this.state.workoutStore });
   }
 
   // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING

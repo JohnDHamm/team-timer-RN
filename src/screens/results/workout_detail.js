@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 
 import _ from 'lodash';
 import Utils from '../../utility/utils'
@@ -8,6 +8,7 @@ import Separator from '../../components/separator';
 import SecondaryButton from '../../components/secondary_button';
 
 import sharedStyles from '../../styles/shared_styles';
+import StoreUtils from '../../utility/store_utils'
 
 const resultsWidth = sharedStyles.DEVICE_WIDTH * 0.5;
 
@@ -22,13 +23,37 @@ export default class WorkoutDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedWorkout: {}
+      selectedWorkout: {},
+      workoutStore: {}
     }
   }
 
   componentDidMount() {
-    const { selectedWorkout } = this.props.navigation.state.params;
-    this.setState({ selectedWorkout });
+    const { selectedWorkout, workoutStore } = this.props.navigation.state.params;
+    // console.log("selected workout: ", selectedWorkout);
+    this.setState({ selectedWorkout, workoutStore });
+  }
+
+  deleteConfirm() {
+    Alert.alert(
+      'Warning!',
+      'There\'s no going back to this workout...',
+      [
+        {text: 'Cancel', onPress: () => console.log('cancel deletion'), style: 'cancel'},
+        {text: 'Delete', onPress: () => this.deleteResult()}
+      ]
+    )
+  }
+
+  deleteResult() {
+    // console.log("delete result:", this.state.selectedWorkout.id);
+    let updatedWorkoutStore = this.state.workoutStore;
+    delete updatedWorkoutStore[this.state.selectedWorkout.id];
+
+    StoreUtils.setStore('WorkoutStore', updatedWorkoutStore)
+      .then(() => {
+        this.props.navigation.navigate('ResultsList');
+      })
   }
 
   renderLaps(lapsArray) {
@@ -103,12 +128,14 @@ export default class WorkoutDetail extends Component {
       <View style={styles.container}>
         <ScrollView>
           { this.renderAthletes() }
-          {/*<View style={styles.deleteBtn}>
+          <TouchableOpacity
+            style={styles.deleteBtn}
+            onPress={() => this.deleteConfirm()}>
             <SecondaryButton
               label={'delete result'}
               color={sharedStyles.COLOR_PURPLE}
             />
-          </View>*/}
+          </TouchableOpacity>
         </ScrollView>
       </View>
     )
@@ -187,10 +214,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: sharedStyles.COLOR_GREEN
   },
-  // deleteBtn: {
-	//   justifyContent: 'center',
-  //   alignItems: 'center',
-	//   paddingVertical: 20
-  // }
+  deleteBtn: {
+	  justifyContent: 'center',
+    alignItems: 'center',
+	  paddingVertical: 20
+  }
 
 });
