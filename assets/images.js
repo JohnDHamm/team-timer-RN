@@ -2,6 +2,8 @@ export default IMAGES = {
 
   // TAB BAR ICONS
   WORKOUT_TAB_ICON: require('./images/workout_tabIcon.png'),
+  RESULTS_TAB_ICON: require('./images/results_tabIcon.png'),
+  TEAM_TAB_ICON: require('./images/team_tabIcon.png'),
 
   // IMAGES
     // SM - up to 50pt
