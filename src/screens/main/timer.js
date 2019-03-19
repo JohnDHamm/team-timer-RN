@@ -324,14 +324,15 @@ const styles = StyleSheet.create({
     height: 100
   },
   backArrow: {
-    width: 13,
-    height: 13 / IMAGES.ARROW_BACK_IOS_ASPECT,
+    width: 12,
+    height: 12 / IMAGES.ARROW_BACK_IOS_ASPECT,
     tintColor: sharedStyles.COLOR_LIGHT_BLUE,
     marginRight: 6
   },
   cancelText: {
 	  color: sharedStyles.COLOR_LIGHT_BLUE,
     fontSize: 16,
+    paddingTop: 1,
   },
   startButton: {
     flexDirection: 'row',
