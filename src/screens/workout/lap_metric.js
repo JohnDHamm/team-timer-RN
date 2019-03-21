@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 
 import sharedStyles from '../../styles/shared_styles';
 import NextButton from '../../components/next_button'
+import {Haptic} from 'expo';
 
 export default class LapMetric extends Component {
 
@@ -20,6 +21,7 @@ export default class LapMetric extends Component {
   };
 
   onSelection(metric) {
+    metric !== this.state.lapMetric ? Haptic.impact(Haptic.ImpactFeedbackStyle.Medium) : null;
     this.setState({lapMetric: metric, disableNextButton: false})
   }
 

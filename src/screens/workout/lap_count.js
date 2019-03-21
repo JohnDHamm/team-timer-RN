@@ -5,6 +5,7 @@ import sharedStyles from '../../styles/shared_styles';
 import IMAGES from '@assets/images'
 
 import NextButton from '../../components/next_button';
+import {Haptic} from 'expo';
 
 const MAX_LAPS = 99;
 
@@ -33,6 +34,7 @@ export default class LapCount extends Component {
       newCount = this.state.lapCount + 1;
     }
 
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
     this.setState({lapCount: newCount});
   }
 

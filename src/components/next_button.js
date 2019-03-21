@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Haptic } from 'expo';
 
 import IMAGES from '@assets/images'
 import sharedStyles from '../styles/shared_styles';
 
 export default class NextButton extends Component {
+
+  onPress() {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Light)
+    this.props.onPress();
+  }
 
   render() {
 
@@ -13,7 +19,7 @@ export default class NextButton extends Component {
         {!this.props.disabled ?
           <TouchableOpacity
             style={styles.container}
-            onPress={() => this.props.onPress()}>
+            onPress={() => this.onPress()}>
             <Text style={styles.label}>{this.props.label}</Text>
             <Image
               source={IMAGES.NEXT_ARROW}
