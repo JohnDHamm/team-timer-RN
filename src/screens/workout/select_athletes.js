@@ -10,6 +10,7 @@ import StoreUtils from '../../utility/store_utils'
 import sharedStyles from '../../styles/shared_styles';
 import NextButton from '../../components/next_button';
 import EmptyTeam from '../../components/empty_team';
+import {Haptic} from 'expo';
 
 export default class SelectAthletes extends Component {
 
@@ -68,6 +69,7 @@ export default class SelectAthletes extends Component {
   }
 
   toggleAthlete(athleteName) {
+    Haptic.impact(Haptic.ImpactFeedbackStyle.Medium);
     let updatedSelectedAthletes = this.state.selectedAthletes;
     if (updatedSelectedAthletes.includes(athleteName)) {
       this.setState({ selectedAthletes: updatedSelectedAthletes.filter(name => name !== athleteName ) }, () => {
