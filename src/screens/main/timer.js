@@ -252,9 +252,9 @@ export default class Timer extends Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>
           {!this.state.timerOn ?
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignSelf: 'stretch'}}>
+            <View style={styles.timerOffTopRow}>
               <TouchableOpacity
-                style={{flexDirection: 'row', paddingLeft: 8, paddingTop: 10, marginRight: 30}}
+                style={styles.backButton}
                 onPress={() => this.cancelWorkout()}
                 >
                 <Image
@@ -263,7 +263,7 @@ export default class Timer extends Component {
                 />
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
-              <View style={{flex: 1, justifyContent: 'center', alignSelf: 'stretch', paddingRight: 20}}>
+              <View style={styles.startBtnContainer}>
                 <TouchableOpacity
                   style={styles.startButton}
                   onPress={() => this.startTimer()}
@@ -277,7 +277,7 @@ export default class Timer extends Component {
               </View>
             </View>
           :
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20}}>
+            <View style={styles.timerOnTopRow}>
               <View>
                 <PieChart
                   chart_wh={74}
@@ -291,7 +291,7 @@ export default class Timer extends Component {
                   <Text style={styles.lapsCompleted}>{this.state.lapsCompleted}</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+              <View style={styles.readoutBlock}>
                 <Text style={styles.description}>{this.state.description}</Text>
                 <Text style={styles.mainReadoutMain}>{this.state.mainReadout.main}</Text>
               </View>
@@ -326,6 +326,18 @@ const styles = StyleSheet.create({
   topContainer: {
     height: 100
   },
+  timerOffTopRow: {
+	  flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch'
+  },
+  backButton: {
+	  flexDirection: 'row',
+    paddingLeft: 8,
+    paddingTop: 10,
+    marginRight: 30
+  },
   backArrow: {
     width: 12,
     height: 12 / IMAGES.ARROW_BACK_IOS_ASPECT,
@@ -336,6 +348,12 @@ const styles = StyleSheet.create({
 	  color: sharedStyles.COLOR_LIGHT_BLUE,
     fontSize: 16,
     paddingTop: 1,
+  },
+  startBtnContainer: {
+	  flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    paddingRight: 20
   },
   startButton: {
     flexDirection: 'row',
@@ -357,14 +375,11 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: sharedStyles.COLOR_PURPLE
   },
-  lapCounter: {
-	  width: 74,
-    height: 74,
-    justifyContent: 'center',
+  timerOnTopRow: {
+	  flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 37,
-    borderWidth: 5,
-    borderColor: sharedStyles.COLOR_PURPLE
+    paddingHorizontal: 20
   },
   lapNumBlock: {
     position: 'absolute',
@@ -379,6 +394,11 @@ const styles = StyleSheet.create({
 	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
 	  fontSize: 40,
     color: sharedStyles.COLOR_GREEN
+  },
+  readoutBlock: {
+	  flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   description: {
 	  fontFamily: sharedStyles.FONT_PRIMARY_REGULAR,
@@ -431,6 +451,4 @@ const styles = StyleSheet.create({
 	  fontSize: 30,
     color: sharedStyles.COLOR_PURPLE
   }
-
-
 });
