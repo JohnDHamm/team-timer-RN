@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "team-timer-RN",
+    "name": "Team Timer",
+    "description": "A multi-athlete lap timer.",
     "slug": "team-timer-RN",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
-      "ios",
-      "android"
+      "ios"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.johndhammcodes.teamtimer",
+      "supportsTablet": false
     }
   }
 }
