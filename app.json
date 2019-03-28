@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Team Timer",
+    "name": "Team Timer Basic",
     "description": "A multi-athlete lap timer.",
     "slug": "team-timer-RN",
     "privacy": "public",
