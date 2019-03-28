@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Font } from 'expo';
 
 import sharedStyles from '../../styles/shared_styles';
+import IMAGES from '@assets/images'
 
 export default class Splash extends Component {
 
@@ -13,18 +14,22 @@ export default class Splash extends Component {
       'dosis-light': require('../../../assets/fonts/Dosis-Light.ttf'),
       'dosis-semiBold': require('../../../assets/fonts/Dosis-SemiBold.ttf'),
     })
-    //TODO: clear navigation history/reset stack to stop user from going back to here with right swipe
-    setTimeout(() => this.props.navigation.navigate('MainApp'), 500);
+    setTimeout(() => this.props.navigation.navigate('MainApp'), 1000);
   }
 
   render(){
     return(
       <View style={styles.container}>
-        <Text style={styles.title}>Team Timer</Text>
+        <Image
+          source={IMAGES.TT_LOGO_TITLE_LG}
+          style={styles.logo}/>
       </View>
     )
   }
 }
+
+const { DEVICE_WIDTH } = sharedStyles;
+const logoWidth = DEVICE_WIDTH * 0.33;
 
 const styles = StyleSheet.create({
 	container: {
@@ -33,9 +38,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
     backgroundColor: sharedStyles.COLOR_DARK_BLUE,
 	},
-  title: {
-    fontWeight: "200",
-    color: sharedStyles.COLOR_PURPLE,
-    fontSize: 40,
+  logo: {
+	  width: logoWidth,
+    height: logoWidth / IMAGES.TT_LOGO_TITLE_ASPECT
   }
 });

@@ -1,4 +1,4 @@
-export default IMAGES = {
+const IMAGES = {
 
   // TAB BAR ICONS
   WORKOUT_TAB_ICON: require('./images/workout_tabIcon.png'),
@@ -15,7 +15,7 @@ export default IMAGES = {
   STOPWATCH_SM: require('./images/stopwatch_sm.png'),
   STOPWATCH_MED: require('./images/stopwatch_med.png'),
   UP_ARROW: require('./images/up_arrow.png'),
-  UP_ARROW_DISABLED: require('./images/up_arrow_disabled.png'),
+  TT_LOGO_TITLE_LG: require('./images/TT_logoWithTitle_lg.png'),
 
 
   // ASPECT RATIOS - width:height
@@ -24,7 +24,8 @@ export default IMAGES = {
   NEXT_ARROW_ASPECT: 1.579,
   STOPWATCH_ASPECT: 0.802,
   UP_ARROW_ASPECT: 2.256,
-
-
+  TT_LOGO_TITLE_ASPECT: 1.075
 
 }
+
+export default IMAGES;
