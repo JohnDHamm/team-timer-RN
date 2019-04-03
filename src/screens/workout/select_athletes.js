@@ -33,7 +33,6 @@ export default class SelectAthletes extends Component {
   }
 
   getAthletes() {
-    console.log("onWillFocus - getAthletes")
     StoreUtils.getStore('TeamStore')
       .then(teamStore => {
         if (teamStore !== null) {

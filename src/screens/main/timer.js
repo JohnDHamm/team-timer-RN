@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image, ActionSheetIOS} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image, ActionSheetIOS, Animated} from 'react-native';
 import { Haptic } from 'expo';
 import PieChart from 'react-native-pie-chart';
 
@@ -10,6 +10,11 @@ import _ from 'lodash';
 
 import IMAGES from '@assets/images';
 import sharedStyles from '../../styles/shared_styles';
+
+const athleteButtonHeight = 102;
+const spaceBetweenButtons = 20;
+const buttonSpacing = athleteButtonHeight + spaceBetweenButtons;
+const buttonAnimDuration = 250;
 
 export default class Timer extends Component {
 
@@ -27,7 +32,11 @@ export default class Timer extends Component {
         decimal: "0",
       },
       lapsCompleted: 0,
-      athletesArray: []
+      athletesArray: [],
+      totalAthletes: 0,
+      btnTopPositions: [],
+      steps: [],
+      currentAthleteOrder: []
     }
   }
 
@@ -47,7 +56,8 @@ export default class Timer extends Component {
     const date = new Date(Date.now()).toDateString().split(" ");
     const month = date[1];
     const day = date[2].charAt(0) === "0" ? date[2].charAt(1) : date[2];
-    this.setState({ description: `${month} ${day} - ${this.state.workoutData.lapCount} x ${this.state.workoutData.lapDistance}${this.state.workoutData.lapMetric}`})
+    const description = `${month} ${day} - ${this.state.workoutData.lapCount} x ${this.state.workoutData.lapDistance}${this.state.workoutData.lapMetric}`;
+    this.setState({ description })
   }
 
   createAthletesArray(sortedAthletes) {
@@ -67,7 +77,28 @@ export default class Timer extends Component {
       };
       athletesArray.push(athleteObj);
     }
-    this.setState({athletesArray});
+    this.setState({athletesArray, totalAthletes: athletesArray.length}, () => {
+      this.initButtons();
+    });
+  }
+
+  initButtons() {
+    // set currentAthleteOrder
+    let currentAthleteOrder = []
+    for (let i = 0; i < this.state.totalAthletes; i++) {
+      currentAthleteOrder.push(this.state.athletesArray[i].index)
+    }
+    this.setState({currentAthleteOrder}, () => {
+      // create steps + initial btnTopPositions
+      let steps = []
+      let btnTopPositions = []
+      for (let i = 0; i < this.state.totalAthletes; i++) {
+        const value = i * buttonSpacing
+        steps.push(value)
+        btnTopPositions.push(new Animated.Value(value))
+      }
+      this.setState({steps, btnTopPositions})
+    });
   }
 
   cancelWorkout() {
@@ -111,7 +142,6 @@ export default class Timer extends Component {
     this.setState({startTime}, () => {
       this.setState({interval: setInterval(this.update.bind(this), 10)});
     });
-
   }
 
   update() {
@@ -164,14 +194,60 @@ export default class Timer extends Component {
               obj => (obj.index === athleteIndex ? Object.assign(obj, {workoutDone: true}) : obj)
             )
           }), () => this.setState(prevState => ({
-              athletesArray: prevState.athletesArray.map(
-                obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: {main: 'done', decimal: ''}}) : obj)
-              )
+            athletesArray: prevState.athletesArray.map(
+              obj => (obj.index === athleteIndex ? Object.assign(obj, {readout: {main: 'done', decimal: ''}}) : obj)
+            )
+          }), () => {
+            // remove athlete from currentAthleteOrder + adjust totalAthletes and container height
+            let currentAthleteOrder = Object.assign([], this.state.currentAthleteOrder)
+            const newCurrentAthleteOrder = currentAthleteOrder.filter(index => index !== athleteIndex)
+            this.setState(prevState => ({
+              totalAthletes: prevState.totalAthletes - 1,
+              currentAthleteOrder: newCurrentAthleteOrder
             }))
+          })
           )
         };
+        this.animateButtons(athleteIndex);
       }
     }
+  }
+
+  animateButtons(index) {
+    // move pressed button to bottom
+    Animated.timing(
+      this.state.btnTopPositions[index],
+      {
+        toValue: this.state.steps[this.state.totalAthletes - 1],
+        duration: buttonAnimDuration,
+      }
+    ).start();
+    // move up 1 step all buttons below the pressed
+    const currentOrderIndex = this.state.currentAthleteOrder.indexOf(index)
+    const btnsToMoveUp = this.makeNextButtonsArray(currentOrderIndex)
+    this.moveUp(btnsToMoveUp)
+    // update currentAthleteOrder
+    let newCurrentAthleteOrder = Object.assign([], this.state.currentAthleteOrder)
+    newCurrentAthleteOrder.splice(currentOrderIndex, 1)
+    newCurrentAthleteOrder.push(index)
+    this.setState({currentAthleteOrder: newCurrentAthleteOrder})
+  }
+
+  makeNextButtonsArray(currentOrderIndex) {
+    return Object.assign([], this.state.currentAthleteOrder).slice(currentOrderIndex + 1)
+  }
+
+  moveUp(btnsArray) {
+    btnsArray.forEach((index) => {
+      const currentOrderIndex = this.state.currentAthleteOrder.indexOf(index)
+      Animated.timing(
+        this.state.btnTopPositions[index],
+        {
+          toValue: this.state.steps[currentOrderIndex - 1],
+          duration: buttonAnimDuration,
+        }
+      ).start()
+    })
   }
 
   checkTotalLaps() {
@@ -221,25 +297,27 @@ export default class Timer extends Component {
     return _.map(this.state.athletesArray, athlete => {
       if (!athlete.workoutDone) {
         return (
-          <TouchableOpacity
-            key={athlete.index}
-            style={styles.athleteButton}
-            onPress={() => this.recordLap(athlete.index)}
-          >
-            <Text style={styles.athleteName}>{athlete.name}</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 5}}>
-                <Text style={styles.lapLabel}>lap: </Text>
-                <Text style={styles.lapNum}>{athlete.currentLap + 1}</Text>
-              </View>
-              <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                <Text style={styles.athleteReadoutMain}>{athlete.readout.main}.</Text>
-                <View style={{width: 35, alignItems: 'flex-start'}}>
-                  <Text style={styles.athleteReadoutDecimal}>{athlete.readout.decimal}</Text>
+          <Animated.View key={athlete.index} style={{position: 'absolute', left: 0, top: this.state.btnTopPositions[athlete.index]}}>
+            <TouchableOpacity
+              key={athlete.index}
+              style={styles.athleteButton}
+              onPress={() => this.recordLap(athlete.index)}
+            >
+              <Text style={styles.athleteName}>{athlete.name}</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 5}}>
+                  <Text style={styles.lapLabel}>lap: </Text>
+                  <Text style={styles.lapNum}>{athlete.currentLap + 1}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                  <Text style={styles.athleteReadoutMain}>{athlete.readout.main}.</Text>
+                  <View style={{width: 35, alignItems: 'flex-start'}}>
+                    <Text style={styles.athleteReadoutDecimal}>{athlete.readout.decimal}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
         )
       } else {
         return null;
@@ -308,13 +386,17 @@ export default class Timer extends Component {
 
         <View style={{flex: 1, backgroundColor: sharedStyles.COLOR_GREEN}}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            {this.renderAthleteButtons()}
+            <View style={{height: this.state.totalAthletes * buttonSpacing}}>
+              {this.renderAthleteButtons()}
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
     )
   }
 }
+
+const SIDE_PADDING = 20;
 
 const styles = StyleSheet.create({
 	container: {
@@ -416,14 +498,16 @@ const styles = StyleSheet.create({
 	  tintColor: sharedStyles.COLOR_RED
   },
   scrollView: {
-    paddingHorizontal: 20,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 20,
     paddingBottom: 20
   },
   athleteButton: {
+	  height: athleteButtonHeight,
+    width: sharedStyles.DEVICE_WIDTH - (2 * SIDE_PADDING),
 	  borderRadius: 5,
     backgroundColor: sharedStyles.COLOR_WHITE,
     paddingLeft: 15,
-    marginVertical: 10,
   },
   athleteName: {
 	  fontFamily: sharedStyles.FONT_PRIMARY_MEDIUM,
