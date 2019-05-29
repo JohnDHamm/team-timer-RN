@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, Image} from 'react-native';
 import { NavigationEvents } from 'react-navigation';
+import { StoreReview } from 'expo';
 
 import _ from 'lodash';
 
@@ -25,9 +26,6 @@ export default class ResultsList extends Component {
     }
   }
 
-  componentDidMount() {
-  }
-
   getResults(){
     // console.log("onWillFocus - getResults");
     StoreUtils.getStore('WorkoutStore')
@@ -36,8 +34,29 @@ export default class ResultsList extends Component {
           // console.log("WorkoutStore", res);
           this.setState({workoutStore: res});
           this.sortList(res);
+          if (Object.keys(res).length > 2 ) {
+            StoreUtils.getStore('LastRatingRequestStore')
+              .then( res => {
+                const now = Date.now();
+                if (res === null) {
+                  this.makeRatingRequest(now); // 1st request
+                } else {
+                  const lastRequestDate = res.date;
+                  const requestSpan = 2 * 7 * 24 * 60 * 60 * 1000; // 2 weeks between requests
+                  if ((now - lastRequestDate) > requestSpan) {
+                    this.makeRatingRequest(now);
+                  }
+                }
+              })
+          }
         }
       })
+  }
+
+  makeRatingRequest(now) {
+    StoreReview.requestReview();
+    StoreUtils.mergeStore('LastRatingRequestStore', { date: now })
+      .then(res => console.log(" update store res:", res));
   }
 
   sortList(workouts) {
