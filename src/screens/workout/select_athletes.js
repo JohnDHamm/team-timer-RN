@@ -35,8 +35,11 @@ export default class SelectAthletes extends Component {
   getAthletes() {
     StoreUtils.getStore('TeamStore')
       .then(teamStore => {
-        if (teamStore !== null) {
+        // console.log("teamStore:", teamStore);
+        if (!_.isEmpty(teamStore)) {
           this.setState({teamList: Utils.createTeamList(teamStore), showEmptyMessage: false})
+        } else {
+          this.setState({ teamList: [], showEmptyMessage: true })
         }
       });
   }
@@ -82,10 +85,24 @@ export default class SelectAthletes extends Component {
     }
   }
 
+  finalizeSelectedAthletes() {
+    // for case where during selection, a selected athlete is then deleted
+    let finalSelection = [];
+    this.state.selectedAthletes.forEach(selAth => {
+      this.state.teamList.forEach(obj => {
+        if (selAth === obj.name) {
+          finalSelection.push(selAth)
+        }
+      })
+    });
+    this.props.navigation.navigate(`ConfirmWorkout`, {
+      ...this.props.navigation.state.params,
+      selectedAthletes: finalSelection
+    })
+  }
+
 
   render(){
-    const { lapCount, lapDistance, lapMetric } = this.props.navigation.state.params;
-
     return(
       <View style={sharedStyles.LAYOUT_MAIN_STRETCH}>
         <NavigationEvents
@@ -102,12 +119,8 @@ export default class SelectAthletes extends Component {
                 <NextButton
                   label={'confirm workout'}
                   disabled={this.state.disableNextButton}
-                  onPress={() => this.props.navigation.navigate(`ConfirmWorkout`, {
-                    lapCount,
-                    lapDistance,
-                    lapMetric,
-                    selectedAthletes: this.state.selectedAthletes
-                  })}/>
+                  onPress={() => this.finalizeSelectedAthletes()}
+                />
               </View>
             </View>
         }
