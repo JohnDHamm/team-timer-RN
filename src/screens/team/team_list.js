@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, ScrollView, TouchableOpacity} from 'react-native'
-import {NavigationActions, StackActions} from 'react-navigation'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal} from 'react-native'
 
 import _ from 'lodash';
 
@@ -9,20 +8,23 @@ import StoreUtils from '../../utility/store_utils';
 import sharedStyles from '../../styles/shared_styles';
 import SecondaryButton from '../../components/secondary_button';
 import EmptyTeam from '../../components/empty_team';
+import AdModal from "../../components/ad_modal";
+import IMAGES from '@assets/images'
 
 export default class TeamList extends Component {
 
   static navigationOptions = {
     title: 'Team',
     headerBackTitle: 'Cancel',
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
       showEmptyMessage: true,
       teamStore: {},
-      teamList: []
+      teamList: [],
+      showAdModal: false
     }
   };
 
@@ -31,13 +33,17 @@ export default class TeamList extends Component {
       .then(teamStore => {
         // console.log("teamStore", teamStore);
         if (!_.isEmpty(teamStore)) {
+          const athletesCount = Object.keys(teamStore).length;
+          if (athletesCount === 1 || athletesCount % 3 === 0 ) {
+            this.setState({showAdModal: true})
+          }
           this.setState({teamStore}, () => {
             this.setState({teamList: Utils.createTeamList(teamStore), showEmptyMessage: false})
           });
         }
       });
   }
-
+  
   renderTeamList() {
     return _.map(this.state.teamList, athlete => {
       return (
@@ -52,20 +58,8 @@ export default class TeamList extends Component {
     })
   }
 
-  // THIS IS TEMPORARY TO CHECK EMPTY TEAM MESSAGE
-  deleteAllAthletes() {
-    if (this.state.teamList.length > 0) {
-      StoreUtils.removeStore('TeamStore')
-        .then(() => {
-          // console.log("removed all athletes");
-          this.setState({teamList: [], teamStore: {}, showEmptyMessage: true})
-        })
-    }
-  }
-
 
   render(){
-
     return(
       <View style={sharedStyles.LAYOUT_MAIN_CENTER}>
         <View style={styles.listContainer}>
@@ -85,7 +79,19 @@ export default class TeamList extends Component {
               color={sharedStyles.COLOR_PURPLE}/>
           </TouchableOpacity>
         </View>
-        {/*<Button title="DELETE ALL" onPress={() => this.deleteAllAthletes()}/>*/}
+        <Modal
+          visible={this.state.showAdModal}
+          animationType='slide'
+          transparent={false}
+          onRequestClose={() => this.setState({showAdModal: false})}
+        >
+          <AdModal
+            topText='…lets you enter pace information for your athletes…'
+            middleImg={IMAGES.TTPRO_AD_ATHLETE}
+            bottomText='…to be used in the timer, helping predict who will be next to complete their lap!'
+            closeModal={() => this.setState({showAdModal: false})}
+          />
+        </Modal>
       </View>
     )
   }

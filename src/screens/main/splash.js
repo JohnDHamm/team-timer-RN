@@ -29,9 +29,7 @@ export default class Splash extends Component {
   checkAd() {
     StoreUtils.getStore('AdStore')
       .then(res => {
-        // console.log("AdStore res:", res);
         const count = (res === null) ? 1 : res.appStarts + 1;
-        console.log("count:", count);
         StoreUtils.mergeStore('AdStore', {appStarts: count})
           .then(() => {
             if (count === 1 || count === 5 || (count % 10 === 0)) {
