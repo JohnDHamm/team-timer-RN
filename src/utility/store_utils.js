@@ -5,28 +5,28 @@ const StoreUtils = {
     try {
       return JSON.parse(await AsyncStorage.getItem(storeKey));
     } catch (error) {
-      console.log("err with StoreUtils.getStore:", error.message);
+      console.log("err with StoreUtils.getStore:", storeKey, error.message);
     }
   },
   setStore: async (storeKey, value) => {
     try {
       return await AsyncStorage.setItem(storeKey, JSON.stringify(value));
     } catch (error) {
-      console.log("err with StoreUtils.setStore:", error.message);
+      console.log("err with StoreUtils.setStore:", storeKey, error.message);
     }
   },
   mergeStore: async (storeKey, value) => {
     try {
       return await AsyncStorage.mergeItem(storeKey, JSON.stringify(value));
     } catch (error) {
-      console.log("err with StoreUtils.mergeStore:", error.message);
+      console.log("err with StoreUtils.mergeStore:", storeKey, error.message);
     }
   },
   removeStore: async (storeKey) => {
     try {
       return await AsyncStorage.removeItem(storeKey);
     } catch (error) {
-      console.log("err with StoreUtils.removeStore:", error.message);
+      console.log("err with StoreUtils.removeStore:", storeKey, error.message);
     }
   }
 };
