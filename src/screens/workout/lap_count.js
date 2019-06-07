@@ -19,7 +19,7 @@ export default class LapCount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lapCount: 5
+      lapCount: 4
     }
   };
 
