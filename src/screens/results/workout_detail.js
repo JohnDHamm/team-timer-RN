@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal} from 'react-native';
 
 import _ from 'lodash';
 import Utils from '../../utility/utils'
+import IMAGES from '@assets/images'
 
 import Separator from '../../components/separator';
 import SecondaryButton from '../../components/secondary_button';
 
 import sharedStyles from '../../styles/shared_styles';
 import StoreUtils from '../../utility/store_utils'
+import AdModal from "../../components/ad_modal";
 
 const resultsWidth = sharedStyles.DEVICE_WIDTH * 0.5;
 
@@ -18,13 +20,14 @@ export default class WorkoutDetail extends Component {
     return {
       title: navigation.getParam('headerTitle', 'Result detail')
     }
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
       selectedWorkout: {},
-      workoutStore: {}
+      workoutStore: {},
+      showAdModal: false
     }
   }
 
@@ -32,6 +35,11 @@ export default class WorkoutDetail extends Component {
     const { selectedWorkout, workoutStore } = this.props.navigation.state.params;
     // console.log("selected workout: ", selectedWorkout);
     this.setState({ selectedWorkout, workoutStore });
+
+    const resultsCount = Object.keys(workoutStore).length;
+    if (resultsCount === 1 || resultsCount % 3 === 0 ) {
+      this.setState({showAdModal: true})
+    }
   }
 
   deleteConfirm() {
@@ -137,6 +145,20 @@ export default class WorkoutDetail extends Component {
             />
           </TouchableOpacity>
         </ScrollView>
+
+        <Modal
+          visible={this.state.showAdModal}
+          animationType='slide'
+          transparent={false}
+          onRequestClose={() => this.setState({showAdModal: false})}
+        >
+          <AdModal
+            topText='…displays pace information in your workout details…'
+            middleImg={IMAGES.TTPRO_AD_RESULT}
+            bottomText='…and lets you share the results for use in any spreadsheet!'
+            closeModal={() => this.setState({showAdModal: false})}
+          />
+        </Modal>
       </View>
     )
   }

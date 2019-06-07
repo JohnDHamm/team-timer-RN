@@ -89,16 +89,6 @@ export default class ResultsList extends Component {
     this.props.navigation.navigate(`WorkoutDetail`, { headerTitle: workout.description,  selectedWorkout: workout, workoutStore: this.state.workoutStore });
   }
 
-  // THIS IS TEMPORARY FOP TESTING THAT NEW RESULTS ARE AUTO LOADING
-  deleteAllWorkouts() {
-    if (this.state.workouts.length > 0) {
-      StoreUtils.removeStore('WorkoutStore')
-        .then(() => {
-          // console.log("removed all workouts");
-          this.setState({workouts: {}, showEmptyMessage: true});
-        })
-    }
-  }
 
   render(){
     return(
@@ -120,9 +110,6 @@ export default class ResultsList extends Component {
               {this.renderWorkouts()}
             </ScrollView>
         }
-        {/*<Button
-          title="DELETE ALL"
-          onPress={() => this.deleteAllWorkouts()}/>*/}
       </View>
     )
   }
